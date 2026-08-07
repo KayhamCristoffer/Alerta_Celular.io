@@ -14,9 +14,9 @@
     .card  { background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:1rem; }
     .cglow { box-shadow:0 0 28px rgba(99,102,241,0.13); border-color:rgba(99,102,241,0.22); }
 
-    .btn-primary { background:linear-gradient(135deg,#6366f1,#8b5cf6); }
+    .btn-primary { background:linear-gradient(135deg,#6366f1,#8b5cf6); border:none; }
     .btn-primary:hover { filter:brightness(1.14); transform:translateY(-1px); box-shadow:0 8px 24px rgba(99,102,241,0.38); }
-    .btn-danger  { background:linear-gradient(135deg,#dc2626,#b91c1c); }
+    .btn-danger  { background:linear-gradient(135deg,#dc2626,#b91c1c); border:none; }
     .btn-danger:hover  { filter:brightness(1.14); transform:translateY(-1px); box-shadow:0 8px 24px rgba(239,68,68,0.42); }
     .btn-google  { background:#fff; color:#222; border:1px solid #ddd; }
     .btn-google:hover  { background:#f1f1f1; box-shadow:0 4px 14px rgba(0,0,0,.18); }
@@ -37,11 +37,19 @@
     ::-webkit-scrollbar-track{background:transparent}
     ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:3px}
 
-    pre code { white-space: pre; }
-    .code-block { background:#0d1117; border:1px solid rgba(255,255,255,.08); border-radius:.75rem; padding:1rem; font-size:.72rem; font-family:'Courier New',monospace; color:#7ee787; overflow-x:auto; }
-    .step-num { width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,.25);border:1px solid rgba(99,102,241,.45);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0; }
+    .code-block { background:#0d1117; border:1px solid rgba(255,255,255,.08); border-radius:.75rem; padding:1rem;
+                  font-size:.72rem; font-family:'Courier New',monospace; color:#7ee787; overflow-x:auto; white-space:pre; }
+    .step-num { width:28px;height:28px;border-radius:50%;background:rgba(99,102,241,.25);
+                border:1px solid rgba(99,102,241,.45);display:flex;align-items:center;justify-content:center;
+                font-size:.7rem;font-weight:700;flex-shrink:0; }
     .badge-ok  { background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.35);color:#86efac;font-size:.65rem;padding:.2rem .55rem;border-radius:999px; }
     .badge-tip { background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.3);color:#fde68a;font-size:.65rem;padding:.2rem .55rem;border-radius:999px; }
+    .badge-red { background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.35);color:#fca5a5;font-size:.65rem;padding:.2rem .55rem;border-radius:999px; }
+
+    .warn-box { background:rgba(251,191,36,.07); border:1px solid rgba(251,191,36,.28); border-radius:.85rem; padding:1rem; }
+    .info-box { background:rgba(99,102,241,.07); border:1px solid rgba(99,102,241,.22); border-radius:.85rem; padding:1rem; }
+    .ok-box   { background:rgba(34,197,94,.07);  border:1px solid rgba(34,197,94,.22);  border-radius:.85rem; padding:1rem; }
+    .err-box  { background:rgba(239,68,68,.07);  border:1px solid rgba(239,68,68,.22);  border-radius:.85rem; padding:1rem; }
   </style>
 </head>
 <body>
@@ -56,20 +64,15 @@
       <h1 class="text-2xl font-bold">Painel de Alertas</h1>
       <p class="text-white/40 text-sm mt-1">Sistema de Notificações do Evento</p>
     </div>
-
-    <div class="card cglow rounded-2xl p-7"
-         style="box-shadow:0 0 60px rgba(99,102,241,.18)">
+    <div class="card cglow rounded-2xl p-7" style="box-shadow:0 0 60px rgba(99,102,241,.18)">
       <h2 class="text-base font-semibold text-center mb-1">Acesso Restrito</h2>
       <p class="text-xs text-white/45 text-center mb-5">Somente usuários autorizados podem entrar.</p>
-
       <div id="login-err" class="hidden mb-4 p-3 rounded-xl bg-red-900/40 border border-red-500/40 text-red-300 text-xs leading-relaxed"></div>
-
       <button id="btn-glogin" onclick="doLogin()"
               class="btn-google w-full py-3 px-4 rounded-xl font-semibold flex items-center justify-center gap-3 text-sm">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5" alt="">
         <span id="login-lbl">Entrar com Google</span>
       </button>
-
       <p class="text-xs text-white/22 text-center mt-4">
         <i class="fas fa-shield-halved mr-1 text-green-500/50"></i>
         Apenas e-mails pré-autorizados têm acesso
@@ -112,18 +115,18 @@
     </div>
   </header>
 
-  <!-- Main content -->
+  <!-- Main -->
   <main class="flex-1 max-w-6xl mx-auto w-full px-4 py-5">
 
-    <!-- Aviso service-account -->
-    <div id="sa-warning" class="mb-4 p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/7
+    <!-- Aviso URL da Cloud Function -->
+    <div id="cf-warning" class="mb-4 p-3.5 rounded-xl border border-amber-500/30 bg-amber-500/7
                                 flex items-start gap-3 text-sm">
       <i class="fas fa-triangle-exclamation text-amber-400 mt-0.5 flex-shrink-0"></i>
       <div class="flex-1">
-        <p class="font-semibold text-amber-300 text-xs">Configure o Service Account para enviar notificações</p>
-        <p class="text-amber-200/55 text-xs mt-0.5">A FCM HTTP v1 usa OAuth2 via Service Account JSON.</p>
+        <p class="font-semibold text-amber-300 text-xs">Configure a URL da Cloud Function</p>
+        <p class="text-amber-200/55 text-xs mt-0.5">Necessária para enviar notificações. Veja o Tutorial para criar.</p>
       </div>
-      <button onclick="showTab('config');this.closest('#sa-warning').style.display='none'"
+      <button onclick="showTab('config');this.closest('#cf-warning').style.display='none'"
               class="text-xs border border-amber-500/35 bg-amber-500/12 rounded-lg px-3 py-1.5
                      hover:bg-amber-500/22 transition-colors whitespace-nowrap">
         Configurar →
@@ -132,22 +135,22 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-      <!-- ── COLUNA ESQUERDA / PRINCIPAL ──────────────────── -->
+      <!-- ── COLUNA ESQUERDA ──────────────────────────── -->
       <div class="lg:col-span-2 space-y-4">
 
         <!-- Tabs -->
         <div class="flex border-b border-white/10 gap-0.5 overflow-x-auto pb-0">
-          <button id="tb-send"     onclick="showTab('send')"     class="tab-active   tab-b px-4 py-2.5 text-xs font-semibold rounded-t-lg whitespace-nowrap transition-all"><i class="fas fa-paper-plane mr-1.5"></i>Enviar Alerta</button>
-          <button id="tb-config"   onclick="showTab('config')"   class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-gear mr-1.5"></i>Configurações</button>
+          <button id="tb-send"     onclick="showTab('send')"     class="tab-active tab-b px-4 py-2.5 text-xs font-semibold rounded-t-lg whitespace-nowrap transition-all"><i class="fas fa-paper-plane mr-1.5"></i>Enviar</button>
+          <button id="tb-config"   onclick="showTab('config')"   class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-gear mr-1.5"></i>Config</button>
           <button id="tb-users"    onclick="showTab('users')"    class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-users mr-1.5"></i>Acesso</button>
-          <button id="tb-flutter"  onclick="showTab('flutter')"  class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-mobile-screen mr-1.5"></i>App Flutter</button>
           <button id="tb-tutorial" onclick="showTab('tutorial')" class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-book-open mr-1.5"></i>Tutorial</button>
+          <button id="tb-flutter"  onclick="showTab('flutter')"  class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-mobile-screen mr-1.5"></i>Flutter</button>
         </div>
 
-        <!-- ━━━━━━━━ ABA: ENVIAR ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <!-- ━━━━━━━━ ABA: ENVIAR ━━━━━━━━━━━━━━━━━━━━━━━ -->
         <div id="tab-send" class="space-y-4">
 
-          <!-- Templates rápidos -->
+          <!-- Templates -->
           <div class="card cglow p-5">
             <p class="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">
               <i class="fas fa-bolt mr-1.5 text-yellow-400"></i>Templates Rápidos
@@ -156,13 +159,13 @@
               <div class="tpl-card card p-3 text-center" onclick="setTpl('🎉 ATENÇÃO!','Em 10 min começa o SORTEIO no palco principal. Corra para não perder!')">
                 <div class="text-2xl mb-1">🎉</div><p class="text-xs font-semibold">Sorteio</p>
               </div>
-              <div class="tpl-card card p-3 text-center" onclick="setTpl('⏰ Próxima Palestra','Atenção! Em 5 minutos começa a palestra no Auditório Principal.')">
+              <div class="tpl-card card p-3 text-center" onclick="setTpl('⏰ Próxima Palestra','Em 5 minutos começa a palestra no Auditório Principal. Garanta seu lugar!')">
                 <div class="text-2xl mb-1">⏰</div><p class="text-xs font-semibold">Palestra</p>
               </div>
               <div class="tpl-card card p-3 text-center" onclick="setTpl('🍽️ Hora do Almoço!','O almoço está servido! Siga para a área de alimentação. Retorno às 14h.')">
                 <div class="text-2xl mb-1">🍽️</div><p class="text-xs font-semibold">Almoço</p>
               </div>
-              <div class="tpl-card card p-3 text-center" onclick="setTpl('🚨 AVISO URGENTE','Atenção a todos os participantes! Dirija-se à saída principal imediatamente.')">
+              <div class="tpl-card card p-3 text-center" onclick="setTpl('🚨 AVISO URGENTE','Atenção! Dirija-se à saída principal imediatamente.')">
                 <div class="text-2xl mb-1">🚨</div><p class="text-xs font-semibold">Urgente</p>
               </div>
             </div>
@@ -170,16 +173,13 @@
 
           <!-- Formulário -->
           <div class="card cglow p-5">
-            <p class="font-semibold text-sm mb-4">
-              <i class="fas fa-bell mr-2 text-indigo-400"></i>Compor Notificação
-            </p>
+            <p class="font-semibold text-sm mb-4"><i class="fas fa-bell mr-2 text-indigo-400"></i>Compor Notificação</p>
 
-            <!-- Modo de envio -->
             <div class="mb-4">
               <p class="text-xs text-white/45 mb-2">Modo de Envio</p>
               <div class="grid grid-cols-3 gap-2">
                 <button id="mode-topic"    onclick="setMode('topic')"
-                        class="mode-on  text-xs py-2.5 rounded-xl border font-medium transition-all">
+                        class="mode-on text-xs py-2.5 rounded-xl border font-medium transition-all">
                   <i class="fas fa-broadcast-tower block text-base mb-1"></i>Tópico (Todos)
                 </button>
                 <button id="mode-token"    onclick="setMode('token')"
@@ -193,7 +193,6 @@
               </div>
             </div>
 
-            <!-- Destinos dinâmicos -->
             <div id="dest-topic" class="mb-4">
               <p class="text-xs text-white/45 mb-1.5">Nome do Tópico</p>
               <div class="relative">
@@ -201,8 +200,7 @@
                 <input id="topic-inp" type="text" value="evento2026"
                        oninput="document.getElementById('st-topic').textContent=this.value||'evento2026'"
                        class="w-full bg-white/5 border border-white/10 rounded-xl pl-9 pr-4 py-2.5 text-sm
-                              focus:outline-none focus:border-indigo-500/50 transition-all"
-                       placeholder="evento2026">
+                              focus:outline-none focus:border-indigo-500/50 transition-all" placeholder="evento2026">
               </div>
               <p class="text-xs text-white/25 mt-1"><i class="fas fa-info-circle mr-1"></i>Todos inscritos neste tópico recebem o alerta</p>
             </div>
@@ -211,7 +209,7 @@
               <textarea id="token-inp" rows="3"
                         class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm
                                font-mono focus:outline-none focus:border-indigo-500/50 transition-all resize-none"
-                        placeholder="Cole aqui o token FCM..."></textarea>
+                        placeholder="Cole o token FCM do dispositivo..."></textarea>
             </div>
             <div id="dest-multiple" class="mb-4 hidden">
               <p class="text-xs text-white/45 mb-1.5">Lista de Tokens (um por linha)</p>
@@ -222,7 +220,6 @@
               <p class="text-xs text-white/25 mt-1">Máx 500 tokens por envio</p>
             </div>
 
-            <!-- Título e Mensagem -->
             <div class="mb-3">
               <p class="text-xs text-white/45 mb-1.5">Título</p>
               <input id="n-title" type="text" oninput="updatePrev()"
@@ -242,7 +239,6 @@
               </div>
             </div>
 
-            <!-- Botões -->
             <div class="flex gap-2">
               <button onclick="sendAlert(false)"
                       class="btn-primary flex-1 py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2">
@@ -270,80 +266,56 @@
           </div>
         </div>
 
-        <!-- ━━━━━━━━ ABA: CONFIGURAÇÕES ━━━━━━━━━━━━━━━━━━━━━━ -->
+        <!-- ━━━━━━━━ ABA: CONFIG ━━━━━━━━━━━━━━━━━━━━━━━ -->
         <div id="tab-config" class="hidden space-y-4">
-
-          <!-- Service Account JSON -->
           <div class="card cglow p-6">
             <div class="flex items-start justify-between mb-1">
-              <p class="font-semibold text-sm"><i class="fas fa-key mr-2 text-yellow-400"></i>Service Account JSON</p>
-              <span class="badge-tip">FCM HTTP v1</span>
+              <p class="font-semibold text-sm"><i class="fas fa-link mr-2 text-yellow-400"></i>URL da Cloud Function</p>
+              <span class="badge-tip">Obrigatório</span>
             </div>
             <p class="text-xs text-white/40 mb-4">
-              Necessário para a API FCM v1. Baixe em
-              <a href="https://console.firebase.google.com/project/alertateste-1a1b4/settings/serviceaccounts/adminsdk"
-                 target="_blank" class="text-indigo-400 hover:underline">Firebase Console → Service Accounts</a>
-              e cole o JSON completo abaixo.
+              Após criar a Cloud Function (veja o Tutorial), cole aqui a URL gerada.
+              Ela terá o formato <code class="text-indigo-300">https://REGIAO-PROJETO.cloudfunctions.net/sendNotification</code>
             </p>
-            <div class="mb-3">
-              <p class="text-xs text-white/45 mb-1.5">Cole o conteúdo do arquivo <code class="text-indigo-300 text-xs">serviceAccountKey.json</code></p>
-              <textarea id="sa-json" rows="7"
-                        class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs
-                               font-mono focus:outline-none focus:border-indigo-500/50 transition-all resize-none"
-                        placeholder='{ "type": "service_account", "project_id": "alertateste-1a1b4", ... }'></textarea>
+            <div class="mb-5">
+              <p class="text-xs text-white/45 mb-1.5">URL da Cloud Function</p>
+              <input id="cf-url" type="url"
+                     class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm
+                            font-mono focus:outline-none focus:border-indigo-500/50 transition-all"
+                     placeholder="https://southamerica-east1-alertateste-1a1b4.cloudfunctions.net/sendNotification">
               <p class="text-xs text-white/22 mt-1.5">
-                <i class="fas fa-lock mr-1 text-green-400/50"></i>
-                Salvo apenas no seu navegador (localStorage). Nunca enviado a nenhum servidor externo.
+                <i class="fas fa-lock mr-1 text-green-400/50"></i>Salvo apenas no seu navegador (localStorage).
               </p>
             </div>
-
-            <!-- Project ID -->
-            <div class="mb-4">
+            <div class="mb-5">
               <p class="text-xs text-white/45 mb-1.5">Project ID</p>
               <input id="proj-id" type="text" value="alertateste-1a1b4"
                      class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm
                             focus:outline-none focus:border-indigo-500/50 transition-all">
             </div>
-
-            <!-- VAPID -->
-            <div class="mb-5">
-              <p class="text-xs text-white/45 mb-1.5">VAPID Public Key <span class="text-white/25">(para Web Push)</span></p>
-              <div class="relative">
-                <input id="vapid-k" type="text"
-                       value="BPTqvjN8Rhb5tIchYbQ1xlTmc8mr06ZJRbnjmZDMOefWu8CHkaVBkpKTwmrMoQvuhmjijluuYbU3ZJLICKDOrQk"
-                       class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-xs
-                              font-mono focus:outline-none focus:border-indigo-500/50 transition-all pr-10">
-              </div>
-            </div>
-
             <button onclick="saveConf()"
                     class="btn-primary w-full py-2.5 rounded-xl font-semibold text-sm flex items-center justify-center gap-2">
               <i class="fas fa-floppy-disk"></i>Salvar Configurações
             </button>
           </div>
 
-          <!-- Como obter o JSON -->
-          <div class="card cglow p-6">
-            <p class="font-semibold text-sm mb-4">
-              <i class="fas fa-list-check mr-2 text-green-400"></i>Como gerar o Service Account Key
-            </p>
-            <ol class="space-y-3">
-              <li class="flex gap-3 text-xs"><span class="step-num">1</span><span class="text-white/60">Acesse <a href="https://console.firebase.google.com" target="_blank" class="text-indigo-400 hover:underline">console.firebase.google.com</a> → projeto <strong class="text-white">alertateste-1a1b4</strong></span></li>
-              <li class="flex gap-3 text-xs"><span class="step-num">2</span><span class="text-white/60">⚙️ <strong class="text-white">Configurações do projeto</strong> → aba <strong class="text-white">Contas de serviço</strong></span></li>
-              <li class="flex gap-3 text-xs"><span class="step-num">3</span><span class="text-white/60">Clique em <strong class="text-white">Gerar nova chave privada</strong> → confirme → baixe o <code class="text-indigo-300">serviceAccountKey.json</code></span></li>
-              <li class="flex gap-3 text-xs"><span class="step-num">4</span><span class="text-white/60">Abra o arquivo, copie todo o conteúdo JSON e cole no campo acima</span></li>
-              <li class="flex gap-3 text-xs"><span class="step-num">5</span><span class="text-white/60">Clique em <strong class="text-white">Salvar Configurações</strong></span></li>
-            </ol>
+          <!-- Teste de conexão -->
+          <div class="card cglow p-5">
+            <p class="font-semibold text-sm mb-3"><i class="fas fa-plug mr-2 text-green-400"></i>Testar Conexão</p>
+            <p class="text-xs text-white/40 mb-3">Verifica se a Cloud Function está acessível.</p>
+            <button onclick="testConnection()"
+                    class="btn-primary px-5 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2">
+              <i id="test-icon" class="fas fa-bolt"></i>
+              <span id="test-lbl">Testar Agora</span>
+            </button>
+            <div id="test-result" class="hidden mt-3 text-xs rounded-xl p-3"></div>
           </div>
         </div>
 
-        <!-- ━━━━━━━━ ABA: ACESSO ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <!-- ━━━━━━━━ ABA: ACESSO ━━━━━━━━━━━━━━━━━━━━━━━ -->
         <div id="tab-users" class="hidden space-y-4">
-
           <div class="card cglow p-5">
-            <p class="font-semibold text-sm mb-4">
-              <i class="fas fa-crown mr-2 text-yellow-400"></i>Proprietário do Projeto
-            </p>
+            <p class="font-semibold text-sm mb-4"><i class="fas fa-crown mr-2 text-yellow-400"></i>Proprietário</p>
             <div class="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/8">
               <div class="w-9 h-9 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500
                           flex items-center justify-center font-bold text-sm flex-shrink-0">K</div>
@@ -354,14 +326,9 @@
               <span class="badge-ok">Proprietário</span>
             </div>
           </div>
-
           <div class="card cglow p-5">
-            <p class="font-semibold text-sm mb-1">
-              <i class="fas fa-user-plus mr-2 text-green-400"></i>E-mails com Acesso ao Painel
-            </p>
-            <p class="text-xs text-white/35 mb-4">
-              Apenas e-mails nesta lista podem fazer login. A conta deve ser Google.
-            </p>
+            <p class="font-semibold text-sm mb-1"><i class="fas fa-user-plus mr-2 text-green-400"></i>E-mails Autorizados</p>
+            <p class="text-xs text-white/35 mb-4">Apenas estes e-mails conseguem fazer login.</p>
             <div class="flex gap-2 mb-4">
               <input id="new-mail" type="email" placeholder="novo@email.com"
                      class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5 text-sm
@@ -374,29 +341,373 @@
             </div>
             <div id="mail-list" class="space-y-2"></div>
           </div>
-
-          <div class="card p-4" style="border-color:rgba(99,102,241,.18);background:rgba(99,102,241,.04)">
+          <div class="info-box">
             <p class="text-xs text-white/45 flex items-start gap-2">
               <i class="fas fa-circle-info text-indigo-400 mt-0.5 flex-shrink-0"></i>
-              A lista fica salva no <strong class="text-white">localStorage do navegador</strong>.
-              Para compartilhar com outra pessoa, adicione o e-mail dela aqui antes de ela tentar logar no mesmo URL.
+              Lista salva no localStorage do navegador. Para dar acesso a outra pessoa, adicione o e-mail dela aqui antes de ela tentar logar.
             </p>
           </div>
         </div>
 
-        <!-- ━━━━━━━━ ABA: FLUTTER ━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <!-- ━━━━━━━━ ABA: TUTORIAL ━━━━━━━━━━━━━━━━━━━━━ -->
+        <div id="tab-tutorial" class="hidden space-y-4">
+
+          <!-- DIAGNÓSTICO DO PROBLEMA -->
+          <div class="err-box">
+            <div class="flex items-start gap-3">
+              <span class="text-2xl">🔍</span>
+              <div>
+                <p class="font-bold text-sm text-red-300 mb-1">Por que o erro "Invalid grant_type" acontece?</p>
+                <p class="text-xs text-white/60 leading-relaxed">
+                  O Google bloqueou chamadas OAuth2 com JWT diretamente do <strong class="text-white">navegador</strong> por segurança (política CORS + proteção de credenciais).
+                  A chave do Service Account <strong class="text-red-300">nunca deve ficar exposta no frontend</strong>.
+                  A solução correta é usar uma <strong class="text-white">Cloud Function</strong> — ela fica no servidor do Google,
+                  usa o Service Account com segurança e expõe apenas um endpoint simples para o painel chamar.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ARQUITETURA -->
+          <div class="card cglow p-6">
+            <p class="font-bold text-sm mb-4"><i class="fas fa-diagram-project mr-2 text-indigo-400"></i>Como Funciona Agora</p>
+            <div class="space-y-2 text-xs">
+              <div class="flex items-center gap-3">
+                <div class="w-32 text-center p-2 rounded-lg bg-indigo-500/20 border border-indigo-500/30 font-medium text-indigo-300 flex-shrink-0">
+                  🌐 Painel Web<br><span class="text-white/40 font-normal">GitHub Pages</span>
+                </div>
+                <div class="flex-1 flex items-center gap-1 text-white/40">
+                  <div class="flex-1 h-px bg-white/20"></div>
+                  <span class="whitespace-nowrap">POST JSON</span>
+                  <div class="flex-1 h-px bg-white/20"></div>
+                  <i class="fas fa-arrow-right"></i>
+                </div>
+                <div class="w-36 text-center p-2 rounded-lg bg-purple-500/20 border border-purple-500/30 font-medium text-purple-300 flex-shrink-0">
+                  ⚡ Cloud Function<br><span class="text-white/40 font-normal">Firebase (gratuito)</span>
+                </div>
+                <div class="flex-1 flex items-center gap-1 text-white/40">
+                  <div class="flex-1 h-px bg-white/20"></div>
+                  <i class="fas fa-arrow-right"></i>
+                  <span class="whitespace-nowrap">FCM v1</span>
+                  <div class="flex-1 h-px bg-white/20"></div>
+                </div>
+                <div class="w-28 text-center p-2 rounded-lg bg-green-500/20 border border-green-500/30 font-medium text-green-300 flex-shrink-0">
+                  📱 Celulares<br><span class="text-white/40 font-normal">Participantes</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TUTORIAL COMPLETO -->
+          <div class="card cglow p-6">
+            <p class="font-bold text-base mb-5">
+              <i class="fas fa-list-ol mr-2 text-indigo-400"></i>Tutorial Completo — Do Zero ao Celular Vibrando
+            </p>
+
+            <!-- PARTE 1: Node.js -->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 1</span>
+                <h3 class="font-semibold text-sm">Instalar Node.js no seu computador</h3>
+              </div>
+              <div class="ml-4 space-y-3 text-xs text-white/60">
+                <p>→ Acesse <a href="https://nodejs.org" target="_blank" class="text-indigo-400 hover:underline font-medium">nodejs.org</a> e baixe a versão <strong class="text-white">LTS</strong></p>
+                <p>→ Instale normalmente (Next, Next, Finish)</p>
+                <p>→ Abra o terminal e confirme:</p>
+                <div class="code-block">node --version   # deve mostrar v18 ou superior
+npm --version    # deve mostrar 9 ou superior</div>
+              </div>
+            </div>
+
+            <!-- PARTE 2: Firebase CLI -->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 2</span>
+                <h3 class="font-semibold text-sm">Instalar e configurar o Firebase CLI</h3>
+              </div>
+              <div class="ml-4 space-y-3 text-xs text-white/60">
+                <p>→ No terminal, execute:</p>
+                <div class="code-block">npm install -g firebase-tools</div>
+                <p>→ Faça login com sua conta Google:</p>
+                <div class="code-block">firebase login</div>
+                <p>→ Vai abrir o navegador — aceite as permissões</p>
+                <p>→ Confirme que está logado:</p>
+                <div class="code-block">firebase projects:list
+# Deve aparecer: alertateste-1a1b4</div>
+              </div>
+            </div>
+
+            <!-- PARTE 3: Criar Cloud Function -->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 3</span>
+                <h3 class="font-semibold text-sm">Criar a Cloud Function</h3>
+              </div>
+              <div class="ml-4 space-y-3 text-xs text-white/60">
+                <p>→ Crie uma pasta e entre nela:</p>
+                <div class="code-block">mkdir fcm-functions
+cd fcm-functions</div>
+                <p>→ Inicie o projeto Firebase:</p>
+                <div class="code-block">firebase init functions</div>
+                <p>Nas perguntas que aparecerem, responda:</p>
+                <div class="space-y-1.5 ml-2">
+                  <p>• <strong class="text-white">Use an existing project</strong> → selecione <strong class="text-indigo-300">alertateste-1a1b4</strong></p>
+                  <p>• <strong class="text-white">Language</strong> → <strong class="text-indigo-300">JavaScript</strong></p>
+                  <p>• <strong class="text-white">ESLint</strong> → <strong class="text-indigo-300">N</strong> (não)</p>
+                  <p>• <strong class="text-white">Install dependencies</strong> → <strong class="text-indigo-300">Y</strong> (sim)</p>
+                </div>
+
+                <p class="mt-3">→ Abra o arquivo <code class="text-indigo-300">functions/index.js</code> e substitua <strong class="text-white">todo o conteúdo</strong> por:</p>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-white/35">functions/index.js</span>
+                  <button onclick="cp('fn-code')" class="text-indigo-400 hover:text-indigo-300 text-xs"><i class="fas fa-copy mr-1"></i>Copiar</button>
+                </div>
+                <pre id="fn-code" class="code-block">const { onRequest } = require("firebase-functions/v2/https");
+const { initializeApp } = require("firebase-admin/app");
+const { getMessaging } = require("firebase-admin/messaging");
+
+// Inicializa o Firebase Admin (usa as credenciais automáticas)
+initializeApp();
+
+exports.sendNotification = onRequest(
+  {
+    // Região mais próxima do Brasil
+    region: "southamerica-east1",
+    // Permite chamadas do GitHub Pages (CORS)
+    cors: true,
+  },
+  async (req, res) => {
+    // Aceita apenas POST
+    if (req.method !== "POST") {
+      return res.status(405).json({ error: "Método não permitido" });
+    }
+
+    try {
+      const { title, body, topic, token, tokens } = req.body;
+
+      if (!title || !body) {
+        return res.status(400).json({ error: "title e body são obrigatórios" });
+      }
+
+      const notification = { title, body };
+      const android = {
+        priority: "high",
+        notification: {
+          channelId: "event_alerts",
+          sound: "default",
+          defaultVibrateTimings: true,
+          notificationPriority: "PRIORITY_HIGH",
+          visibility: "PUBLIC",
+        },
+      };
+      const apns = {
+        payload: { aps: { sound: "default", badge: 1 } },
+        headers: { "apns-priority": "10" },
+      };
+
+      let result;
+
+      if (topic) {
+        // Enviar para um tópico (todos os inscritos)
+        result = await getMessaging().send({
+          topic,
+          notification,
+          android,
+          apns,
+          data: { type: "EVENT_ALERT", ts: String(Date.now()) },
+        });
+        return res.json({ success: true, sent: 1, messageId: result });
+
+      } else if (tokens && Array.isArray(tokens) && tokens.length > 0) {
+        // Enviar para lista de tokens (máx 500 por vez)
+        const chunks = [];
+        for (let i = 0; i < tokens.length; i += 500) {
+          chunks.push(tokens.slice(i, i + 500));
+        }
+        let totalOk = 0, totalFail = 0;
+        for (const chunk of chunks) {
+          const r = await getMessaging().sendEachForMulticast({
+            tokens: chunk,
+            notification,
+            android,
+            apns,
+            data: { type: "EVENT_ALERT", ts: String(Date.now()) },
+          });
+          totalOk   += r.successCount;
+          totalFail += r.failureCount;
+        }
+        return res.json({
+          success: true,
+          sent: totalOk,
+          failed: totalFail,
+        });
+
+      } else if (token) {
+        // Enviar para um token específico
+        result = await getMessaging().send({
+          token,
+          notification,
+          android,
+          apns,
+          data: { type: "EVENT_ALERT", ts: String(Date.now()) },
+        });
+        return res.json({ success: true, sent: 1, messageId: result });
+
+      } else {
+        return res.status(400).json({
+          error: "Informe topic, token ou tokens[]",
+        });
+      }
+    } catch (err) {
+      console.error("Erro FCM:", err);
+      return res.status(500).json({
+        success: false,
+        error: err.message,
+        code: err.code,
+      });
+    }
+  }
+);</pre>
+              </div>
+            </div>
+
+            <!-- PARTE 4: Fazer o deploy -->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 4</span>
+                <h3 class="font-semibold text-sm">Fazer o deploy da Cloud Function</h3>
+              </div>
+              <div class="ml-4 space-y-3 text-xs text-white/60">
+                <p>→ No terminal (dentro da pasta <code class="text-indigo-300">fcm-functions</code>):</p>
+                <div class="code-block">firebase deploy --only functions</div>
+                <p>→ Aguarde 1–3 minutos. No final aparecerá algo como:</p>
+                <div class="code-block" style="color:#58a6ff">✔  functions[sendNotification(southamerica-east1)]: Successful!
+
+Function URL (sendNotification(southamerica-east1)):
+https://southamerica-east1-alertateste-1a1b4.cloudfunctions.net/sendNotification</div>
+                <div class="warn-box mt-2">
+                  <p class="text-xs text-amber-200/80 flex items-start gap-2">
+                    <i class="fas fa-copy text-amber-400 mt-0.5 flex-shrink-0"></i>
+                    <strong>Copie esta URL</strong> e cole na aba ⚙️ Configurações deste painel → Salvar.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- PARTE 5: Habilitar Billing (Spark → Blaze) -->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="bg-orange-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 5</span>
+                <h3 class="font-semibold text-sm">Ativar plano Blaze (obrigatório para deploy)</h3>
+              </div>
+              <div class="ml-4 space-y-3 text-xs text-white/60">
+                <div class="warn-box">
+                  <p class="font-semibold text-amber-300 text-xs mb-1">⚠️ O Firebase exige o plano Blaze para fazer deploy de Cloud Functions</p>
+                  <p class="text-amber-200/70">O plano Blaze é <strong class="text-white">pago conforme o uso</strong>, mas tem uma generosa cota gratuita.
+                  Para um evento, o custo será <strong class="text-white">R$ 0,00</strong> (as primeiras 2 milhões de chamadas por mês são gratuitas).</p>
+                </div>
+                <p>→ Acesse: <a href="https://console.firebase.google.com/project/alertateste-1a1b4/usage/details" target="_blank" class="text-indigo-400 hover:underline">Firebase Console → Uso e cobrança</a></p>
+                <p>→ Clique em <strong class="text-white">Fazer upgrade</strong> → selecione <strong class="text-white">Blaze</strong></p>
+                <p>→ Adicione um cartão (não será cobrado dentro do limite gratuito)</p>
+                <p>→ Defina um <strong class="text-white">limite de orçamento</strong> como R$ 5 para segurança</p>
+                <p>→ Volte ao terminal e execute o deploy novamente (Parte 4)</p>
+              </div>
+            </div>
+
+            <!-- PARTE 6: App Flutter -->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 6</span>
+                <h3 class="font-semibold text-sm">Configurar o App no Celular (Flutter)</h3>
+              </div>
+              <div class="ml-4 space-y-3 text-xs text-white/60">
+                <p>→ Veja a aba <strong class="text-white">📱 Flutter</strong> para o código completo</p>
+                <p>→ Coloque o arquivo <code class="text-indigo-300">google-services.json</code> em <code class="text-indigo-300">android/app/</code></p>
+                <p>→ Execute no celular com:</p>
+                <div class="code-block">flutter run</div>
+                <p>→ O app pedirá permissão de notificação — <strong class="text-white">aceite!</strong></p>
+                <p>→ O app se inscreve automaticamente no tópico <code class="text-indigo-300">evento2026</code></p>
+                <p>→ O token FCM aparece na tela do app — copie para testar no painel</p>
+              </div>
+            </div>
+
+            <!-- PARTE 7: Domínio no Firebase Auth -->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="bg-green-700 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 7</span>
+                <h3 class="font-semibold text-sm">Autorizar o domínio no Firebase Auth</h3>
+              </div>
+              <div class="ml-4 space-y-2 text-xs text-white/60">
+                <p>→ Firebase Console → <strong class="text-white">Authentication</strong> → aba <strong class="text-white">Settings</strong></p>
+                <p>→ <strong class="text-white">Authorized domains</strong> → <strong class="text-white">Add domain</strong></p>
+                <p>→ Adicione: <code class="text-indigo-300">kayhamcristoffer.github.io</code></p>
+                <p>→ Isso permite o botão "Entrar com Google" funcionar no GitHub Pages</p>
+              </div>
+            </div>
+
+            <!-- PARTE 8: GitHub Pages -->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <span class="bg-gray-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 8</span>
+                <h3 class="font-semibold text-sm">Ativar o GitHub Pages</h3>
+              </div>
+              <div class="ml-4 space-y-2 text-xs text-white/60">
+                <p>→ <a href="https://github.com/KayhamCristoffer/Alerta_Celular.io/settings/pages" target="_blank" class="text-indigo-400 hover:underline">github.com/KayhamCristoffer/Alerta_Celular.io → Settings → Pages</a></p>
+                <p>→ Source: <strong class="text-white">Deploy from a branch</strong></p>
+                <p>→ Branch: <strong class="text-white">main</strong> · Folder: <strong class="text-white">/ (root)</strong></p>
+                <p>→ Save → aguarde ~1 min → acesse <code class="text-indigo-300">https://kayhamcristoffer.github.io/Alerta_Celular.io/</code></p>
+              </div>
+            </div>
+
+            <!-- CHECKLIST FINAL -->
+            <div class="ok-box">
+              <p class="font-bold text-sm text-green-300 mb-3">✅ Checklist Final</p>
+              <div class="space-y-2 text-xs">
+                <label class="flex items-center gap-2 cursor-pointer text-white/70">
+                  <input type="checkbox" class="rounded"> Node.js instalado
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70">
+                  <input type="checkbox" class="rounded"> Firebase CLI instalado e logado
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70">
+                  <input type="checkbox" class="rounded"> Plano Blaze ativado no Firebase
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70">
+                  <input type="checkbox" class="rounded"> Cloud Function deployada (URL copiada)
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70">
+                  <input type="checkbox" class="rounded"> URL da função colada na aba ⚙️ Config
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70">
+                  <input type="checkbox" class="rounded"> Domínio github.io autorizado no Firebase Auth
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70">
+                  <input type="checkbox" class="rounded"> GitHub Pages ativado (branch main, raiz /)
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70">
+                  <input type="checkbox" class="rounded"> App Flutter instalado no celular de teste
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70">
+                  <input type="checkbox" class="rounded"> Celular aceitou permissão de notificação
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70">
+                  <input type="checkbox" class="rounded"> 🎉 Primeiro alerta enviado e recebido!
+                </label>
+              </div>
+            </div>
+
+          </div><!-- /card tutorial -->
+        </div><!-- /tab-tutorial -->
+
+        <!-- ━━━━━━━━ ABA: FLUTTER ━━━━━━━━━━━━━━━━━━━━━━ -->
         <div id="tab-flutter" class="hidden space-y-4">
           <div class="card cglow p-6">
-            <p class="font-semibold text-sm mb-1">
-              <i class="fas fa-mobile-screen mr-2 text-blue-400"></i>App Flutter de Teste
-            </p>
-            <p class="text-xs text-white/40 mb-5">
-              Código completo para receber alertas. Copie e cole no seu projeto Flutter.
-            </p>
+            <p class="font-semibold text-sm mb-1"><i class="fas fa-mobile-screen mr-2 text-blue-400"></i>App Flutter</p>
+            <p class="text-xs text-white/40 mb-5">Código completo para Android e iOS.</p>
 
             <div class="mb-5">
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs text-white/35 font-mono">pubspec.yaml — dependências</span>
+                <span class="text-xs text-white/35 font-mono">pubspec.yaml</span>
                 <button onclick="cp('pub-code')" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-copy mr-1"></i>Copiar</button>
               </div>
               <pre id="pub-code" class="code-block">dependencies:
@@ -407,18 +718,46 @@
   flutter_local_notifications: ^17.2.2</pre>
             </div>
 
+            <div class="mb-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-white/35 font-mono">android/app/build.gradle</span>
+                <button onclick="cp('gradle-code')" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-copy mr-1"></i>Copiar</button>
+              </div>
+              <pre id="gradle-code" class="code-block">plugins {
+    id("com.android.application")
+    id("com.google.gms.google-services")  // ← adicionar
+}
+
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:34.17.0"))
+    implementation("com.google.firebase:firebase-messaging")
+}</pre>
+            </div>
+
+            <div class="mb-5">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-white/35 font-mono">android/build.gradle (raiz)</span>
+                <button onclick="cp('root-gradle')" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-copy mr-1"></i>Copiar</button>
+              </div>
+              <pre id="root-gradle" class="code-block">plugins {
+    id("com.google.gms.google-services") version "4.5.0" apply false
+}</pre>
+            </div>
+
             <div>
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs text-white/35 font-mono">main.dart — código completo</span>
+                <span class="text-xs text-white/35 font-mono">lib/main.dart</span>
                 <button onclick="cp('main-code')" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-copy mr-1"></i>Copiar</button>
               </div>
-              <pre id="main-code" class="code-block" style="max-height:340px;overflow-y:auto">import 'package:flutter/material.dart';
+              <pre id="main-code" class="code-block" style="max-height:400px;overflow-y:auto">import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
+// Handler para mensagens em background
 @pragma('vm:entry-point')
 Future&lt;void&gt; bgHandler(RemoteMessage msg) async {
   await Firebase.initializeApp();
+  debugPrint('BG: ${msg.notification?.title}');
 }
 
 void main() async {
@@ -433,9 +772,11 @@ class EventoApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) =&gt; MaterialApp(
     title: 'Alertas Evento',
+    debugShowCheckedModeBanner: false,
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(
-        seedColor: Colors.indigo, brightness: Brightness.dark,
+        seedColor: Colors.indigo,
+        brightness: Brightness.dark,
       ),
     ),
     home: const AlertScreen(),
@@ -450,7 +791,7 @@ class AlertScreen extends StatefulWidget {
 
 class _AlertScreenState extends State&lt;AlertScreen&gt; {
   String _token = 'Carregando...';
-  final List&lt;String&gt; _msgs = [];
+  final List&lt;Map&lt;String, String&gt;&gt; _msgs = [];
 
   @override
   void initState() {
@@ -461,26 +802,42 @@ class _AlertScreenState extends State&lt;AlertScreen&gt; {
   Future&lt;void&gt; _setup() async {
     final fcm = FirebaseMessaging.instance;
 
-    // Pede permissão (necessário iOS e Android 13+)
-    await fcm.requestPermission(
-      alert: true, badge: true, sound: true,
+    // 1. Pedir permissão (obrigatório iOS e Android 13+)
+    final settings = await fcm.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+      announcement: true,
     );
+    debugPrint('Permissão: ${settings.authorizationStatus}');
 
-    // Inscreve no tópico do evento — recebe todos os alertas
+    // 2. Inscrever no tópico do evento
     await fcm.subscribeToTopic('evento2026');
     debugPrint('Inscrito no tópico: evento2026');
 
-    // Obtém o token único deste dispositivo
+    // 3. Obter token único do dispositivo
     final token = await fcm.getToken();
-    setState(() =&gt; _token = token ?? 'Erro ao obter token');
+    if (mounted) setState(() =&gt; _token = token ?? 'Erro');
     debugPrint('FCM Token: $token');
 
-    // Escuta mensagens com o app aberto (foreground)
-    FirebaseMessaging.onMessage.listen((RemoteMessage msg) {
-      final t = msg.notification?.title ?? '';
-      final b = msg.notification?.body  ?? '';
-      setState(() =&gt; _msgs.insert(0, '$t\n$b'));
-    });
+    // 4. Escutar mensagens com o app ABERTO (foreground)
+    FirebaseMessaging.onMessage.listen(_onMessage);
+
+    // 5. Quando o usuário toca na notificação (app em bg)
+    FirebaseMessaging.onMessageOpenedApp.listen(_onMessage);
+
+    // 6. Verificar se o app foi aberto por uma notificação
+    final initial = await fcm.getInitialMessage();
+    if (initial != null) _onMessage(initial);
+  }
+
+  void _onMessage(RemoteMessage msg) {
+    final t = msg.notification?.title ?? 'Alerta';
+    final b = msg.notification?.body  ?? '';
+    final ts = '${DateTime.now().hour}:${DateTime.now().minute.toString().padLeft(2, '0')}';
+    if (mounted) {
+      setState(() =&gt; _msgs.insert(0, {'title': t, 'body': b, 'time': ts}));
+    }
   }
 
   @override
@@ -489,258 +846,139 @@ class _AlertScreenState extends State&lt;AlertScreen&gt; {
     appBar: AppBar(
       title: const Text('🔔 Alertas do Evento'),
       backgroundColor: const Color(0xFF131630),
+      elevation: 0,
     ),
     body: Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(children: [
-        // ── Token Card ─────────────────────────────────────
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: Colors.indigo.withOpacity(.1),
-            border: Border.all(color: Colors.indigo.withOpacity(.3)),
-            borderRadius: BorderRadius.circular(14),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Token FCM deste dispositivo:',
-                style: TextStyle(color: Colors.white54, fontSize: 11)),
-              const SizedBox(height: 6),
-              SelectableText(_token,
-                style: const TextStyle(
-                  fontSize: 10, fontFamily: 'monospace',
-                  color: Colors.greenAccent,
-                )),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        const Align(
-          alignment: Alignment.centerLeft,
-          child: Text('Alertas Recebidos:',
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
-        ),
-        const SizedBox(height: 8),
-        Expanded(
-          child: _msgs.isEmpty
-            ? const Center(
-                child: Text('Aguardando alertas...',
-                  style: TextStyle(color: Colors.white30)))
-            : ListView.builder(
-                itemCount: _msgs.length,
-                itemBuilder: (_, i) =&gt; Container(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  padding: const EdgeInsets.all(13),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.05),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white.withOpacity(.07)),
-                  ),
-                  child: Text(_msgs[i],
-                    style: const TextStyle(
-                      fontSize: 13, color: Colors.white70)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ── Token Card ───────────────────────────────────
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
+            decoration: BoxDecoration(
+              color: Colors.indigo.withOpacity(.1),
+              border: Border.all(color: Colors.indigo.withOpacity(.3)),
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    const Icon(Icons.phonelink_ring,
+                      color: Colors.indigoAccent, size: 14),
+                    const SizedBox(width: 6),
+                    const Text('Token FCM deste dispositivo:',
+                      style: TextStyle(color: Colors.white54, fontSize: 11)),
+                  ],
                 ),
-              ),
-        ),
-      ]),
+                const SizedBox(height: 6),
+                SelectableText(_token,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontFamily: 'monospace',
+                    color: Colors.greenAccent,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                const Text(
+                  '✓ Inscrito no tópico: evento2026',
+                  style: TextStyle(
+                    color: Colors.green, fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          const Text('📬 Alertas Recebidos:',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontSize: 14,
+            )),
+          const SizedBox(height: 8),
+
+          Expanded(
+            child: _msgs.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.notifications_none,
+                        size: 48, color: Colors.white.withOpacity(.2)),
+                      const SizedBox(height: 8),
+                      Text('Aguardando alertas...',
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(.3),
+                          fontSize: 14)),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: _msgs.length,
+                  itemBuilder: (_, i) =&gt; Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.all(13),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(.05),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(.07)),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(_msgs[i]['title']!,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                )),
+                              if (_msgs[i]['body']!.isNotEmpty) ...[
+                                const SizedBox(height: 2),
+                                Text(_msgs[i]['body']!,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white.withOpacity(.6),
+                                  )),
+                              ],
+                            ],
+                          ),
+                        ),
+                        Text(_msgs[i]['time']!,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.white.withOpacity(.3),
+                          )),
+                      ],
+                    ),
+                  ),
+                ),
+          ),
+        ],
+      ),
     ),
   );
 }</pre>
             </div>
           </div>
-        </div>
-
-        <!-- ━━━━━━━━ ABA: TUTORIAL ━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
-        <div id="tab-tutorial" class="hidden space-y-4">
-
-          <!-- FCM HTTP v1 explicado -->
-          <div class="card cglow p-6">
-            <div class="flex items-center gap-3 mb-4">
-              <p class="font-bold text-base">📖 Tutorial Completo — FCM HTTP v1</p>
-              <span class="badge-ok">API Atual</span>
-            </div>
-
-            <div class="mb-5 p-4 rounded-xl bg-indigo-500/8 border border-indigo-500/20">
-              <p class="text-xs text-white/60 leading-relaxed">
-                <strong class="text-white">Por que FCM HTTP v1?</strong><br>
-                A API legada (Server Key) foi desativada em junho de 2024. A versão v1 usa
-                <strong class="text-indigo-300">OAuth 2.0 + Service Account</strong> — mais segura,
-                com suporte a personalizações por plataforma (Android, iOS, Web) e
-                entrega confiável mesmo com o app em segundo plano.
-              </p>
-            </div>
-
-            <div class="space-y-6">
-
-              <div>
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="step-num">1</span>
-                  <h3 class="font-semibold text-sm">Gerar o Service Account Key</h3>
-                </div>
-                <div class="ml-10 space-y-1.5 text-xs text-white/55">
-                  <p>→ <a href="https://console.firebase.google.com" target="_blank" class="text-indigo-400 hover:underline">console.firebase.google.com</a> → projeto <strong class="text-white">alertateste-1a1b4</strong></p>
-                  <p>→ ⚙️ <strong class="text-white">Configurações do projeto</strong> → aba <strong class="text-white">Contas de serviço</strong></p>
-                  <p>→ Clique em <strong class="text-white">Gerar nova chave privada</strong> → baixe o JSON</p>
-                  <p>→ Cole o conteúdo na aba <strong class="text-white">⚙️ Configurações</strong> deste painel</p>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="step-num">2</span>
-                  <h3 class="font-semibold text-sm">Habilitar Cloud Messaging API</h3>
-                </div>
-                <div class="ml-10 space-y-1.5 text-xs text-white/55">
-                  <p>→ <a href="https://console.cloud.google.com/apis/library/fcm.googleapis.com?project=alertateste-1a1b4" target="_blank" class="text-indigo-400 hover:underline">Google Cloud Console → APIs → Firebase Cloud Messaging API</a></p>
-                  <p>→ Clique em <strong class="text-white">Ativar</strong> (se ainda não estiver)</p>
-                  <p>→ Confirme que no Firebase Console em <strong class="text-white">Cloud Messaging</strong> aparece <strong class="text-green-400">API Firebase Cloud Messaging (V1) Ativado</strong></p>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="step-num">3</span>
-                  <h3 class="font-semibold text-sm">Endpoint FCM HTTP v1</h3>
-                </div>
-                <div class="ml-10 space-y-2 text-xs">
-                  <p class="text-white/55">O endpoint correto para enviar mensagens é:</p>
-                  <div class="code-block break-all">POST https://fcm.googleapis.com/v1/projects/alertateste-1a1b4/messages:send</div>
-                  <p class="text-white/55 mt-2">Headers obrigatórios:</p>
-                  <div class="code-block">Authorization: Bearer &lt;ACCESS_TOKEN_OAUTH2&gt;
-Content-Type: application/json</div>
-                  <p class="text-white/40 mt-1">O token OAuth2 é gerado automaticamente a partir do Service Account JSON.</p>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="step-num">4</span>
-                  <h3 class="font-semibold text-sm">Estrutura do Payload (FCM v1)</h3>
-                </div>
-                <div class="ml-10 space-y-2 text-xs">
-                  <p class="text-white/55">Enviar para um <strong class="text-white">tópico</strong>:</p>
-                  <div class="code-block">{
-  "message": {
-    "topic": "evento2026",
-    "notification": {
-      "title": "🎉 ATENÇÃO!",
-      "body": "Sorteio em 5 minutos no palco!"
-    },
-    "android": {
-      "priority": "high",
-      "notification": {
-        "channel_id": "event_alerts",
-        "sound": "default",
-        "default_vibrate_timings": true,
-        "notification_priority": "PRIORITY_HIGH",
-        "visibility": "PUBLIC"
-      }
-    },
-    "apns": {
-      "payload": {
-        "aps": {
-          "sound": "default",
-          "badge": 1
-        }
-      }
-    }
-  }
-}</div>
-                  <p class="text-white/55 mt-3">Enviar para um <strong class="text-white">token específico</strong>:</p>
-                  <div class="code-block">{
-  "message": {
-    "token": "fcm-token-do-dispositivo",
-    "notification": { "title": "...", "body": "..." }
-  }
-}</div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="step-num">5</span>
-                  <h3 class="font-semibold text-sm">Configurar App Flutter (build.gradle)</h3>
-                </div>
-                <div class="ml-10 space-y-2 text-xs">
-                  <p class="text-white/55"><code>android/build.gradle</code> (nível raiz):</p>
-                  <div class="code-block">plugins {
-  id("com.google.gms.google-services") version "4.5.0" apply false
-}</div>
-                  <p class="text-white/55 mt-2"><code>android/app/build.gradle</code> (nível app):</p>
-                  <div class="code-block">plugins {
-  id("com.android.application")
-  id("com.google.gms.google-services")
-}
-dependencies {
-  implementation(platform("com.google.firebase:firebase-bom:34.17.0"))
-  implementation("com.google.firebase:firebase-messaging")
-}</div>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="step-num">6</span>
-                  <h3 class="font-semibold text-sm">Inscrever no Tópico (Flutter)</h3>
-                </div>
-                <div class="ml-10 space-y-2 text-xs">
-                  <p class="text-white/55">O código da aba 📱 App Flutter já inclui:</p>
-                  <div class="code-block">await FirebaseMessaging.instance.subscribeToTopic('evento2026');</div>
-                  <p class="text-white/40 mt-1">Todos os dispositivos que rodarem o app se inscrevem automaticamente.</p>
-                </div>
-              </div>
-
-              <div>
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="step-num">7</span>
-                  <h3 class="font-semibold text-sm">Habilitar domínio no Firebase Auth</h3>
-                </div>
-                <div class="ml-10 space-y-1.5 text-xs text-white/55">
-                  <p>→ Firebase Console → <strong class="text-white">Authentication</strong> → aba <strong class="text-white">Settings</strong></p>
-                  <p>→ <strong class="text-white">Authorized domains</strong> → <strong class="text-white">Add domain</strong></p>
-                  <p>→ Adicione: <code class="text-indigo-300">kayhamcristoffer.github.io</code></p>
-                  <p>→ Isso permite o login Google funcionar no GitHub Pages</p>
-                </div>
-              </div>
-
-              <div class="p-4 rounded-xl bg-green-500/8 border border-green-500/20">
-                <div class="flex items-center gap-3 mb-3">
-                  <div class="w-7 h-7 rounded-full bg-green-500 flex items-center justify-center text-xs font-bold flex-shrink-0">✓</div>
-                  <h3 class="font-semibold text-sm text-green-300">Pronto para enviar alertas!</h3>
-                </div>
-                <div class="ml-10 space-y-1 text-xs text-white/55">
-                  <p>→ Aba <strong class="text-white">Enviar Alerta</strong> → escolha um template</p>
-                  <p>→ Selecione modo <strong class="text-white">Tópico (Todos)</strong> → tópico: <code class="text-indigo-300">evento2026</code></p>
-                  <p>→ Clique <strong class="text-white">Enviar Notificação</strong></p>
-                  <p>→ Todos os celulares recebem em segundos! 🎉</p>
-                </div>
-              </div>
-
-              <!-- VAPID -->
-              <div>
-                <div class="flex items-center gap-3 mb-3">
-                  <span class="step-num">+</span>
-                  <h3 class="font-semibold text-sm">Sua VAPID Key (Web Push)</h3>
-                </div>
-                <div class="ml-10 text-xs space-y-2">
-                  <p class="text-white/55">Já configurada no Firebase:</p>
-                  <div class="code-block break-all">BPTqvjN8Rhb5tIchYbQ1xlTmc8mr06ZJRbnjmZDMOefWu8CHkaVBkpKTwmrMoQvuhmjijluuYbU3ZJLICKDOrQk</div>
-                  <p class="text-white/35 mt-1">Use para enviar notificações a usuários no navegador (Chrome/Edge/Firefox).</p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
+        </div><!-- /tab-flutter -->
 
       </div><!-- /col-left -->
 
       <!-- ── COLUNA DIREITA ──────────────────────────────── -->
       <div class="space-y-4">
 
-        <!-- Preview celular -->
+        <!-- Preview -->
         <div class="card cglow p-5">
           <p class="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">
             <i class="fas fa-eye mr-1.5"></i>Preview
@@ -783,13 +1021,13 @@ dependencies {
           </p>
           <div class="space-y-2.5 text-sm">
             <div class="flex justify-between"><span class="text-white/50">Enviados</span><span id="st-sent" class="font-bold text-indigo-300">0</span></div>
-            <div class="flex justify-between"><span class="text-white/50">Último envio</span><span id="st-last" class="text-white/30 text-xs">—</span></div>
+            <div class="flex justify-between"><span class="text-white/50">Último</span><span id="st-last" class="text-white/30 text-xs">—</span></div>
             <div class="flex justify-between"><span class="text-white/50">Tópico</span><span id="st-topic" class="text-xs font-mono text-green-400">evento2026</span></div>
-            <div class="flex justify-between"><span class="text-white/50">Usuário</span><span id="st-user" class="text-xs text-white/35 max-w-[120px] truncate text-right">—</span></div>
+            <div class="flex justify-between"><span class="text-white/50">Usuário</span><span id="st-user" class="text-xs text-white/35 max-w-[110px] truncate text-right">—</span></div>
           </div>
         </div>
 
-        <!-- Dicas -->
+        <!-- Dicas rápidas -->
         <div class="card cglow p-5">
           <p class="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">
             <i class="fas fa-lightbulb mr-1.5 text-yellow-400"></i>Dicas
@@ -797,11 +1035,28 @@ dependencies {
           <ul class="space-y-1.5 text-xs text-white/40">
             <li class="flex gap-2"><span class="text-green-400 flex-shrink-0">✓</span>Tópico envia para todos de uma vez</li>
             <li class="flex gap-2"><span class="text-green-400 flex-shrink-0">✓</span>Emojis no título chamam atenção</li>
-            <li class="flex gap-2"><span class="text-green-400 flex-shrink-0">✓</span>Mensagens curtas têm mais impacto</li>
-            <li class="flex gap-2"><span class="text-yellow-400 flex-shrink-0">!</span>Participante precisa instalar o app</li>
-            <li class="flex gap-2"><span class="text-yellow-400 flex-shrink-0">!</span>Aceitar permissão de notificação</li>
-            <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">i</span>FCM v1 usa Service Account OAuth2</li>
+            <li class="flex gap-2"><span class="text-green-400 flex-shrink-0">✓</span>Mensagens curtas = mais impacto</li>
+            <li class="flex gap-2"><span class="text-yellow-400 flex-shrink-0">!</span>App deve estar instalado no celular</li>
+            <li class="flex gap-2"><span class="text-yellow-400 flex-shrink-0">!</span>Participante aceita permissão</li>
+            <li class="flex gap-2"><span class="text-blue-400 flex-shrink-0">i</span>Cloud Function = gratuito até 2M/mês</li>
           </ul>
+        </div>
+
+        <!-- Status configuração -->
+        <div class="card cglow p-5">
+          <p class="text-xs font-semibold text-white/40 uppercase tracking-widest mb-3">
+            <i class="fas fa-circle-check mr-1.5"></i>Status
+          </p>
+          <div class="space-y-2 text-xs">
+            <div class="flex items-center gap-2">
+              <div id="s-cf" class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></div>
+              <span class="text-white/50">Cloud Function</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div id="s-auth" class="w-2 h-2 rounded-full bg-red-500 flex-shrink-0"></div>
+              <span class="text-white/50">Login Firebase</span>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -814,14 +1069,13 @@ dependencies {
   <div id="toast-in" class="rounded-xl px-4 py-3 text-xs font-semibold shadow-2xl flex items-center gap-2"></div>
 </div>
 
-<!-- ═══════════════ FIREBASE SDK + LÓGICA ══════════════════ -->
+<!-- ═══════════════ FIREBASE + LÓGICA ══════════════════════ -->
 <script type="module">
-import { initializeApp }          from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { initializeApp }       from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, signInWithPopup, signOut,
          GoogleAuthProvider, onAuthStateChanged }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-// ── Firebase config ──────────────────────────────────────────
 const FB = initializeApp({
   apiKey:            "AIzaSyB_GjviAQDdLvpkFg-TvkH9hvYNaL5pMxo",
   authDomain:        "alertateste-1a1b4.firebaseapp.com",
@@ -832,9 +1086,7 @@ const FB = initializeApp({
 });
 const auth     = getAuth(FB);
 const provider = new GoogleAuthProvider();
-const OWNER    = 'kayhamoliveira98@gmail.com';
 
-// ── Expor ao escopo global ────────────────────────────────────
 window.doLogin  = () => {
   setLoginLoading(true);
   signInWithPopup(auth, provider).catch(e => {
@@ -853,221 +1105,166 @@ onAuthStateChanged(auth, user => {
     }
     window._user = user;
     showApp(user);
+    document.getElementById('s-auth').className = 'w-2 h-2 rounded-full bg-green-500 flex-shrink-0';
   } else {
     window._user = null;
     showLogin();
+    document.getElementById('s-auth').className = 'w-2 h-2 rounded-full bg-red-500 flex-shrink-0';
   }
 });
 
-// ── Gerar access token OAuth2 via Service Account (RSA-SHA256) ──
-// Usa apenas Web Crypto API — sem backend, sem dependências externas.
-async function getAccessToken() {
-  const raw = localStorage.getItem('sa_json');
-  if (!raw) throw new Error('Service Account JSON não configurado. Vá em ⚙️ Configurações.');
-
-  let sa;
-  try { sa = JSON.parse(raw); } catch { throw new Error('JSON inválido no Service Account.'); }
-
-  const now  = Math.floor(Date.now() / 1000);
-  const claim = {
-    iss: sa.client_email,
-    scope: 'https://www.googleapis.com/auth/firebase.messaging',
-    aud: 'https://oauth2.googleapis.com/token',
-    exp: now + 3600,
-    iat: now,
-  };
-
-  const header  = btoa(JSON.stringify({ alg: 'RS256', typ: 'JWT' })).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
-  const payload = btoa(JSON.stringify(claim)).replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
-  const unsigned = `${header}.${payload}`;
-
-  // Importar chave privada PEM
-  const pem = sa.private_key
-    .replace('-----BEGIN PRIVATE KEY-----','')
-    .replace('-----END PRIVATE KEY-----','')
-    .replace(/\s/g,'');
-  const der = Uint8Array.from(atob(pem), c => c.charCodeAt(0));
-
-  const cryptoKey = await crypto.subtle.importKey(
-    'pkcs8', der.buffer,
-    { name:'RSASSA-PKCS1-v1_5', hash:'SHA-256' },
-    false, ['sign']
-  );
-
-  const sig = await crypto.subtle.sign(
-    'RSASSA-PKCS1-v1_5', cryptoKey,
-    new TextEncoder().encode(unsigned)
-  );
-
-  const sigB64 = btoa(String.fromCharCode(...new Uint8Array(sig)))
-    .replace(/=/g,'').replace(/\+/g,'-').replace(/\//g,'_');
-
-  const jwt = `${unsigned}.${sigB64}`;
-
-  // Trocar JWT por access_token
-  const resp = await fetch('https://oauth2.googleapis.com/token', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `grant_type=urn:ietf:params:oauth2:grant-type:jwt-bearer&assertion=${jwt}`,
-  });
-
-  const data = await resp.json();
-  if (!resp.ok) throw new Error(data.error_description || data.error || 'Erro OAuth2');
-  return data.access_token;
-}
-
-// ── Enviar notificação FCM v1 ─────────────────────────────────
-async function fcmSend(title, body, mode, dest) {
-  const token = await getAccessToken();
-  const projId = localStorage.getItem('fcm_proj') || 'alertateste-1a1b4';
-  const url = `https://fcm.googleapis.com/v1/projects/${projId}/messages:send`;
-
-  const notification = { title, body };
-  const android = {
-    priority: 'high',
-    notification: {
-      channel_id: 'event_alerts',
-      sound: 'default',
-      default_vibrate_timings: true,
-      notification_priority: 'PRIORITY_HIGH',
-      visibility: 'PUBLIC',
-    }
-  };
-  const apns = { payload: { aps: { sound: 'default', badge: 1 } } };
-
-  const buildMsg = (target) => ({
-    message: { ...target, notification, android, apns,
-      data: { type:'EVENT_ALERT', ts: String(Date.now()) } }
-  });
-
-  let targets = [];
-  if (mode === 'topic')    targets = [{ topic: dest }];
-  else if (mode === 'token') targets = [{ token: dest }];
-  else targets = dest.split('\n').filter(t => t.trim()).slice(0,500).map(t => ({ token: t.trim() }));
-
-  let ok = 0, fail = 0;
-  for (const t of targets) {
-    const r = await fetch(url, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify(buildMsg(t)),
-    });
-    const d = await r.json();
-    if (r.ok) ok++; else { fail++; console.error('FCM error', d); }
-  }
-
-  return { ok, fail, total: targets.length };
-}
-
-// ── Expor funções de envio ───────────────────────────────────
+// ── Enviar via Cloud Function ────────────────────────────────
 window.sendAlert = async (isEmergency) => {
-  const title   = isEmergency ? '🚨 ALERTA DE EMERGÊNCIA'
-                              : document.getElementById('n-title').value.trim();
-  const body    = isEmergency ? 'Atenção todos! Dirija-se à saída principal imediatamente.'
-                              : document.getElementById('n-msg').value.trim();
+  if (isEmergency && !confirm('Enviar ALERTA DE EMERGÊNCIA para todos?')) return;
+
+  const cfUrl = localStorage.getItem('cf_url');
+  if (!cfUrl) { showToast('error','❌ Configure a URL da Cloud Function na aba ⚙️ Config'); showTab('config'); return; }
+
+  const title   = isEmergency ? '🚨 ALERTA DE EMERGÊNCIA' : document.getElementById('n-title').value.trim();
+  const body    = isEmergency ? 'Atenção todos! Dirija-se à saída principal imediatamente.' : document.getElementById('n-msg').value.trim();
   if (!title || !body) { showToast('error','Preencha título e mensagem'); return; }
 
   const mode = window._mode || 'topic';
-  let dest;
-  if (mode==='topic')    dest = document.getElementById('topic-inp').value||'evento2026';
-  else if (mode==='token') dest = document.getElementById('token-inp').value.trim();
-  else dest = document.getElementById('multi-inp').value;
+  const payload = { title, body };
+  if (mode === 'topic')    payload.topic  = document.getElementById('topic-inp').value || 'evento2026';
+  else if (mode === 'token') payload.token = document.getElementById('token-inp').value.trim();
+  else payload.tokens = document.getElementById('multi-inp').value.trim()
+         .split('\n').map(t=>t.trim()).filter(Boolean).slice(0,500);
 
   document.getElementById('si').className = 'fas fa-spinner fa-spin';
   document.getElementById('sl').textContent = 'Enviando...';
+
   try {
-    const res = await fcmSend(title, body, mode, dest);
-    if (res.fail === 0) showToast('success', `✅ ${res.ok} notificação(ões) enviada(s)!`);
-    else showToast('warning', `⚠️ ${res.ok} ok, ${res.fail} falha(s)`);
-    addHist(title, body);
-    window._sent = (window._sent||0) + res.ok;
-    document.getElementById('st-sent').textContent = window._sent;
-    document.getElementById('st-last').textContent  = 'agora mesmo';
+    const res  = await fetch(cfUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json();
+    if (data.success) {
+      const n = data.sent || 1;
+      showToast('success', `✅ ${n} notificação(ões) enviada(s)!`);
+      addHist(title, body);
+      window._sent = (window._sent || 0) + n;
+      document.getElementById('st-sent').textContent = window._sent;
+      document.getElementById('st-last').textContent = 'agora mesmo';
+    } else {
+      showToast('error', '❌ Erro: ' + (data.error || JSON.stringify(data)));
+      console.error('FCM error:', data);
+    }
   } catch(e) {
-    showToast('error', '❌ ' + e.message);
+    showToast('error', '❌ Erro de rede: ' + e.message);
   } finally {
     document.getElementById('si').className = 'fas fa-paper-plane';
     document.getElementById('sl').textContent = 'Enviar Notificação';
   }
 };
+
+// ── Testar conexão ──────────────────────────────────────────
+window.testConnection = async () => {
+  const cfUrl = localStorage.getItem('cf_url');
+  if (!cfUrl) { showToast('error','Cole a URL primeiro'); return; }
+  const icon = document.getElementById('test-icon');
+  const lbl  = document.getElementById('test-lbl');
+  const res  = document.getElementById('test-result');
+  icon.className = 'fas fa-spinner fa-spin'; lbl.textContent = 'Testando...';
+  try {
+    const r = await fetch(cfUrl, {
+      method: 'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ title:'Teste', body:'Ping', topic:'__test_ping__' }),
+    });
+    const d = await r.json();
+    if (r.ok) {
+      res.className = 'mt-3 text-xs rounded-xl p-3 bg-green-900/40 border border-green-500/40 text-green-300';
+      res.textContent = '✅ Cloud Function acessível! Resposta: ' + JSON.stringify(d);
+      document.getElementById('s-cf').className = 'w-2 h-2 rounded-full bg-green-500 flex-shrink-0';
+    } else {
+      res.className = 'mt-3 text-xs rounded-xl p-3 bg-red-900/40 border border-red-500/40 text-red-300';
+      res.textContent = '❌ Erro: ' + JSON.stringify(d);
+    }
+  } catch(e) {
+    res.className = 'mt-3 text-xs rounded-xl p-3 bg-red-900/40 border border-red-500/40 text-red-300';
+    res.textContent = '❌ Sem conexão: ' + e.message;
+  } finally {
+    res.classList.remove('hidden');
+    icon.className = 'fas fa-bolt'; lbl.textContent = 'Testar Agora';
+  }
+};
 </script>
 
-<!-- Script auxiliar (sem módulo) -->
 <script>
 const OWNER_MAIL = 'kayhamoliveira98@gmail.com';
 
 // ── E-mails autorizados ──────────────────────────────────────
 function getAllowedMails() {
   try {
-    const list = JSON.parse(localStorage.getItem('allowed_mails')||'[]');
-    return [...new Set([OWNER_MAIL, ...list])].map(e=>e.toLowerCase());
+    const list = JSON.parse(localStorage.getItem('allowed_mails') || '[]');
+    return [...new Set([OWNER_MAIL, ...list])].map(e => e.toLowerCase());
   } catch { return [OWNER_MAIL]; }
 }
 function saveMails(list) {
-  localStorage.setItem('allowed_mails',
-    JSON.stringify(list.filter(e=>e!==OWNER_MAIL)));
+  localStorage.setItem('allowed_mails', JSON.stringify(list.filter(e => e !== OWNER_MAIL)));
 }
 window.addMail = () => {
   const inp = document.getElementById('new-mail');
   const em  = inp.value.trim().toLowerCase();
-  if (!em||!em.includes('@')) { showToast('error','E-mail inválido'); return; }
+  if (!em || !em.includes('@')) { showToast('error','E-mail inválido'); return; }
   const list = getAllowedMails();
   if (list.includes(em)) { showToast('warning','Já existe'); return; }
   saveMails([...list, em]);
-  inp.value='';
+  inp.value = '';
   renderMails();
-  showToast('success','✅ E-mail adicionado!');
+  showToast('success','✅ Adicionado!');
 };
 window.removeMail = (em) => {
-  if (em===OWNER_MAIL) { showToast('error','Proprietário não pode ser removido'); return; }
-  saveMails(getAllowedMails().filter(e=>e!==em));
+  if (em === OWNER_MAIL) { showToast('error','Proprietário não pode ser removido'); return; }
+  saveMails(getAllowedMails().filter(e => e !== em));
   renderMails();
-  showToast('success','Removido');
 };
 function renderMails() {
   const el = document.getElementById('mail-list');
   if (!el) return;
   el.innerHTML = getAllowedMails().map(em => {
-    const own = em===OWNER_MAIL;
+    const own = em === OWNER_MAIL;
     return `<div class="flex items-center gap-2 p-2.5 rounded-xl bg-white/5 border border-white/8">
       <div class="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-xs font-bold
-                  ${own?'bg-gradient-to-br from-yellow-400 to-orange-500':'bg-indigo-500/40'}">
+                  ${own ? 'bg-gradient-to-br from-yellow-400 to-orange-500' : 'bg-indigo-500/40'}">
         ${em.charAt(0).toUpperCase()}
       </div>
       <span class="flex-1 text-xs text-white/65 truncate">${em}</span>
       ${own
         ? '<span class="badge-ok flex-shrink-0">Proprietário</span>'
-        : `<button onclick="removeMail('${em}')"
-                   class="p-1.5 rounded-lg hover:bg-red-900/40 text-white/25 hover:text-red-400 transition-all text-xs flex-shrink-0">
-             <i class="fas fa-trash"></i>
-           </button>`}
+        : `<button onclick="removeMail('${em}')" class="p-1.5 rounded-lg hover:bg-red-900/40 text-white/25 hover:text-red-400 transition-all text-xs flex-shrink-0"><i class="fas fa-trash"></i></button>`
+      }
     </div>`;
   }).join('');
 }
 
 // ── Config ───────────────────────────────────────────────────
 function loadConf() {
-  const sj = localStorage.getItem('sa_json');
-  const pi = localStorage.getItem('fcm_proj') || 'alertateste-1a1b4';
-  const vk = localStorage.getItem('vapid_k')  || 'BPTqvjN8Rhb5tIchYbQ1xlTmc8mr06ZJRbnjmZDMOefWu8CHkaVBkpKTwmrMoQvuhmjijluuYbU3ZJLICKDOrQk';
-  if (sj) document.getElementById('sa-json').value = sj;
-  document.getElementById('proj-id').value  = pi;
-  document.getElementById('vapid-k').value  = vk;
+  const url = localStorage.getItem('cf_url') || '';
+  const pid = localStorage.getItem('fcm_proj') || 'alertateste-1a1b4';
+  document.getElementById('cf-url').value  = url;
+  document.getElementById('proj-id').value = pid;
+  if (url) {
+    document.getElementById('cf-warning').style.display = 'none';
+    document.getElementById('s-cf').className = 'w-2 h-2 rounded-full bg-yellow-400 flex-shrink-0';
+  }
 }
 window.saveConf = () => {
-  const sj = document.getElementById('sa-json').value.trim();
-  const pi = document.getElementById('proj-id').value.trim();
-  const vk = document.getElementById('vapid-k').value.trim();
-  if (!sj) { showToast('error','Cole o Service Account JSON'); return; }
-  try { JSON.parse(sj); } catch { showToast('error','JSON inválido'); return; }
-  localStorage.setItem('sa_json',   sj);
-  localStorage.setItem('fcm_proj',  pi);
-  localStorage.setItem('vapid_k',   vk);
-  document.getElementById('sa-warning').style.display='none';
-  showToast('success','✅ Configurações salvas!');
+  const url = document.getElementById('cf-url').value.trim();
+  const pid = document.getElementById('proj-id').value.trim();
+  if (!url) { showToast('error','Informe a URL da Cloud Function'); return; }
+  if (!url.startsWith('https://')) { showToast('error','URL deve começar com https://'); return; }
+  localStorage.setItem('cf_url',   url);
+  localStorage.setItem('fcm_proj', pid);
+  document.getElementById('cf-warning').style.display = 'none';
+  document.getElementById('s-cf').className = 'w-2 h-2 rounded-full bg-yellow-400 flex-shrink-0';
+  showToast('success','✅ Salvo! Clique em Testar Conexão para verificar.');
 };
 
-// ── UI Login ─────────────────────────────────────────────────
+// ── UI ────────────────────────────────────────────────────────
 window.setLoginLoading = (v) => {
   document.getElementById('btn-glogin').disabled = v;
   document.getElementById('login-lbl').textContent = v ? 'Aguarde...' : 'Entrar com Google';
@@ -1085,24 +1282,20 @@ window.showApp = (user) => {
   document.getElementById('screen-login').classList.add('hidden');
   document.getElementById('screen-app').classList.remove('hidden');
   const av = document.getElementById('u-avatar');
-  if (user.photoURL) { av.src=user.photoURL; av.classList.remove('hidden'); }
-  document.getElementById('u-name').textContent  = user.displayName||'';
-  document.getElementById('u-email').textContent = user.email||'';
-  document.getElementById('st-user').textContent = user.email||'';
-  loadConf();
-  renderMails();
-  if (localStorage.getItem('sa_json')) {
-    document.getElementById('sa-warning').style.display='none';
-  }
+  if (user.photoURL) { av.src = user.photoURL; av.classList.remove('hidden'); }
+  document.getElementById('u-name').textContent  = user.displayName || '';
+  document.getElementById('u-email').textContent = user.email || '';
+  document.getElementById('st-user').textContent = user.email || '';
+  loadConf(); renderMails();
 };
 
 // ── Tabs ──────────────────────────────────────────────────────
 window.showTab = (tab) => {
-  ['send','config','users','flutter','tutorial'].forEach(t => {
-    document.getElementById('tab-'+t).classList.toggle('hidden', t!==tab);
-    const b = document.getElementById('tb-'+t);
-    if (t===tab) { b.classList.add('tab-active'); b.classList.remove('text-white/40'); }
-    else         { b.classList.remove('tab-active'); b.classList.add('text-white/40'); }
+  ['send','config','users','tutorial','flutter'].forEach(t => {
+    document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
+    const b = document.getElementById('tb-' + t);
+    if (t === tab) { b.classList.add('tab-active'); b.classList.remove('text-white/40'); }
+    else           { b.classList.remove('tab-active'); b.classList.add('text-white/40'); }
   });
 };
 
@@ -1111,19 +1304,19 @@ window._mode = 'topic';
 window.setMode = (m) => {
   window._mode = m;
   ['topic','token','multiple'].forEach(x => {
-    document.getElementById('dest-'+x).classList.toggle('hidden', x!==m);
-    const b = document.getElementById('mode-'+x);
-    if (x===m) b.className='mode-on  text-xs py-2.5 rounded-xl border border-indigo-500/50 bg-indigo-500/20 text-indigo-300 font-medium transition-all';
-    else       b.className='mode-off text-xs py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/50 font-medium transition-all hover:border-white/20';
+    document.getElementById('dest-' + x).classList.toggle('hidden', x !== m);
+    const b = document.getElementById('mode-' + x);
+    if (x === m) b.className = 'mode-on text-xs py-2.5 rounded-xl border border-indigo-500/50 bg-indigo-500/20 text-indigo-300 font-medium transition-all';
+    else         b.className = 'mode-off text-xs py-2.5 rounded-xl border border-white/10 bg-white/5 text-white/50 font-medium transition-all hover:border-white/20';
   });
   document.getElementById('st-topic').textContent =
-    m==='topic' ? (document.getElementById('topic-inp').value||'evento2026') : '—';
+    m === 'topic' ? (document.getElementById('topic-inp').value || 'evento2026') : '—';
 };
 
 // ── Templates ─────────────────────────────────────────────────
-window.setTpl = (t,m) => {
-  document.getElementById('n-title').value=t;
-  document.getElementById('n-msg').value=m;
+window.setTpl = (t, m) => {
+  document.getElementById('n-title').value = t;
+  document.getElementById('n-msg').value   = m;
   updatePrev();
 };
 
@@ -1131,13 +1324,13 @@ window.setTpl = (t,m) => {
 window.updatePrev = () => {
   const t = document.getElementById('n-title').value;
   const m = document.getElementById('n-msg').value;
-  document.getElementById('c-count').textContent = m.length+'/200';
-  const has = t||m;
-  document.getElementById('ph-notif').classList.toggle('hidden',!has);
-  document.getElementById('ph-empty').classList.toggle('hidden',!!has);
+  document.getElementById('c-count').textContent = m.length + '/200';
+  const has = t || m;
+  document.getElementById('ph-notif').classList.toggle('hidden', !has);
+  document.getElementById('ph-empty').classList.toggle('hidden',  !!has);
   if (has) {
-    document.getElementById('pv-title').textContent = t||'(sem título)';
-    document.getElementById('pv-msg').textContent   = m||'';
+    document.getElementById('pv-title').textContent = t || '(sem título)';
+    document.getElementById('pv-msg').textContent   = m || '';
   }
 };
 
@@ -1145,19 +1338,18 @@ window.updatePrev = () => {
 window._sent = 0;
 const _hist = [];
 window.addHist = (title, msg) => {
-  const now = new Date();
-  const ts  = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0');
-  _hist.unshift({title,msg,ts});
-  const el = document.getElementById('hist');
-  el.innerHTML = _hist.slice(0,10).map(h=>`
-    <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/5 border border-white/8">
-      <div class="w-2 h-2 rounded-full bg-green-400 mt-1.5 flex-shrink-0"></div>
-      <div class="flex-1 min-w-0">
-        <p class="text-xs font-semibold truncate">${h.title}</p>
-        <p class="text-xs text-white/30 truncate">${h.msg}</p>
-      </div>
-      <span class="text-xs text-white/22 flex-shrink-0">${h.ts}</span>
-    </div>`).join('');
+  const ts = new Date().getHours() + ':' + String(new Date().getMinutes()).padStart(2,'0');
+  _hist.unshift({ title, msg, ts });
+  document.getElementById('hist').innerHTML =
+    _hist.slice(0,10).map(h => `
+      <div class="flex items-start gap-2.5 p-2.5 rounded-xl bg-white/5 border border-white/8">
+        <div class="w-2 h-2 rounded-full bg-green-400 mt-1.5 flex-shrink-0"></div>
+        <div class="flex-1 min-w-0">
+          <p class="text-xs font-semibold truncate">${h.title}</p>
+          <p class="text-xs text-white/30 truncate">${h.msg}</p>
+        </div>
+        <span class="text-xs text-white/22 flex-shrink-0">${h.ts}</span>
+      </div>`).join('');
 };
 
 // ── Toast ──────────────────────────────────────────────────────
@@ -1165,27 +1357,19 @@ window.showToast = (type, msg) => {
   const t = document.getElementById('toast');
   const i = document.getElementById('toast-in');
   const cls = {
-    success:'bg-green-900/90 border border-green-500/40 text-green-100',
-    error  :'bg-red-900/90 border border-red-500/40 text-red-100',
-    warning:'bg-amber-900/90 border border-amber-500/40 text-amber-100',
+    success: 'bg-green-900/90 border border-green-500/40 text-green-100',
+    error:   'bg-red-900/90 border border-red-500/40 text-red-100',
+    warning: 'bg-amber-900/90 border border-amber-500/40 text-amber-100',
   };
-  i.className='rounded-xl px-4 py-3 text-xs font-semibold shadow-2xl flex items-center gap-2 '+(cls[type]||cls.success);
-  i.innerHTML=msg; t.classList.remove('hidden');
-  setTimeout(()=>t.classList.add('hidden'),4000);
+  i.className = 'rounded-xl px-4 py-3 text-xs font-semibold shadow-2xl flex items-center gap-2 ' + (cls[type] || cls.success);
+  i.innerHTML = msg; t.classList.remove('hidden');
+  setTimeout(() => t.classList.add('hidden'), 5000);
 };
 
-// ── Copy code ──────────────────────────────────────────────────
+// ── Copy ──────────────────────────────────────────────────────
 window.cp = (id) => {
   navigator.clipboard.writeText(document.getElementById(id).innerText)
-    .then(()=>showToast('success','✅ Código copiado!'));
-};
-
-// ── Emergência com confirmação ─────────────────────────────────
-window.sendAlert = window.sendAlert || ((emer) => showToast('warning','Aguarde carregar...'));
-const _origSend = window.sendAlert;
-window.sendAlert = (emer) => {
-  if (emer && !confirm('Enviar ALERTA DE EMERGÊNCIA para todos os participantes?')) return;
-  _origSend(emer);
+    .then(() => showToast('success','✅ Copiado!'));
 };
 </script>
 
