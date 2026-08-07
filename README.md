@@ -1,128 +1,99 @@
-# 🔔 Painel de Alertas do Evento
+# 🔔 Painel de Alertas — Evento
 
-Sistema de notificações push para eventos usando **Firebase Cloud Messaging v1** + **Cloud Functions**.
+Sistema de notificações push para eventos usando Firebase Cloud Messaging v1.
 
-🌐 **Acesse:** https://kayhamcristoffer.github.io/Alerta_Celular.io/
+## 🌐 URLs
+- **GitHub Pages:** https://kayhamcristoffer.github.io/Alerta_Celular.io/
+- **Repositório:** https://github.com/KayhamCristoffer/Alerta_Celular.io
 
----
+## ✅ Funcionalidades
+- Login com Google (Firebase Auth) — acesso restrito
+- Envio de alertas por **Tópico** (todos), **Token único** ou **Múltiplos tokens**
+- Templates rápidos: Sorteio, Palestra, Almoço, Urgente
+- Preview da notificação em tempo real
+- Histórico dos últimos 10 envios
+- Gerenciamento de e-mails autorizados
+- Aba **Tutorial** — Cloud Function (7 passos + checklist)
+- Aba **Celular** — Guia visual completo para instalar o app no smartphone (9 passos + solução de problemas)
+- Aba **Flutter** — Código completo do app Android/iOS
 
 ## 🏗️ Arquitetura
 
 ```
 Painel Web (GitHub Pages)
-        │  POST { title, body, topic }
-        ▼
-Cloud Function (Firebase — gratuito)
-        │  FCM HTTP v1 (OAuth2 automático)
-        ▼
-📱 Celulares dos Participantes
+     │  POST JSON {title, body, topic}
+     ▼
+Cloud Function (Firebase, southamerica-east1)
+     │  FCM HTTP v1 via Admin SDK
+     ▼
+Firebase Cloud Messaging
+     │  Push Notification
+     ▼
+📱 Celulares dos Participantes (Android/iOS)
 ```
 
-> O painel **não** usa Service Account direto no browser (bloqueado pelo Google por segurança).
-> A Cloud Function roda no servidor do Google e usa as credenciais automaticamente.
+**Por que Cloud Function?**
+O Google bloqueia chamadas OAuth2 JWT diretamente do navegador (CORS). A Cloud Function usa o Firebase Admin SDK com credenciais automáticas — sem JWT manual, sem chave exposta no frontend.
 
----
+## 🚀 Setup Rápido
 
-## 🚀 Funcionalidades
+### 1. Ativar Plano Blaze
+Firebase Console → Uso e cobrança → Upgrade para Blaze (gratuito até 2M chamadas/mês)
 
-| Aba | O que faz |
-|-----|-----------|
-| 🔔 **Enviar** | Templates + envio por tópico, token único ou lista |
-| ⚙️ **Config** | URL da Cloud Function + teste de conexão |
-| 👥 **Acesso** | E-mails autorizados a fazer login |
-| 📖 **Tutorial** | Passo a passo completo com código |
-| 📱 **Flutter** | Código do app para receber alertas |
-
----
-
-## ⚙️ Setup Completo (8 Passos)
-
-### 1. Instalar Node.js
-Baixe em [nodejs.org](https://nodejs.org) (versão LTS).
-
-### 2. Instalar Firebase CLI
+### 2. Deploy da Cloud Function
 ```bash
 npm install -g firebase-tools
 firebase login
-```
-
-### 3. Criar a Cloud Function
-```bash
 mkdir fcm-functions && cd fcm-functions
-firebase init functions
-# Projeto: alertateste-1a1b4 | Linguagem: JavaScript
-```
-
-Substitua o conteúdo de `functions/index.js` pelo código da **aba Tutorial** do painel.
-
-### 4. Ativar plano Blaze (obrigatório para deploy)
-[Firebase Console → Uso e cobrança](https://console.firebase.google.com/project/alertateste-1a1b4/usage/details)
-→ Upgrade para Blaze → adicione cartão (cota gratuita: 2M chamadas/mês = **R$ 0,00** para eventos).
-
-### 5. Fazer deploy da Cloud Function
-```bash
+firebase init functions  # alertateste-1a1b4, JavaScript, N, Y
+# copiar código do Tutorial → functions/index.js
 firebase deploy --only functions
-```
-Copie a URL gerada (ex: `https://southamerica-east1-alertateste-1a1b4.cloudfunctions.net/sendNotification`).
-
-### 6. Configurar o painel
-Abra o painel → aba ⚙️ Config → cole a URL → Salvar → Testar Conexão.
-
-### 7. Autorizar domínio no Firebase Auth
-[Firebase Console → Authentication → Settings → Authorized domains](https://console.firebase.google.com/project/alertateste-1a1b4/authentication/settings)
-→ Add domain → `kayhamcristoffer.github.io`
-
-### 8. Ativar GitHub Pages
-Repositório → Settings → Pages → Branch: `main` / Folder: `/ (root)` → Save.
-
----
-
-## 📱 App Flutter
-
-Ver aba **📱 Flutter** no painel para código completo.
-
-```yaml
-# pubspec.yaml
-dependencies:
-  firebase_core: ^3.6.0
-  firebase_messaging: ^15.1.3
+# copiar URL gerada
 ```
 
-O app se inscreve automaticamente no tópico `evento2026`. Qualquer alerta enviado para esse tópico chega a todos os celulares com o app instalado.
+### 3. Configurar o Painel
+Abrir GitHub Pages → aba ⚙️ Config → colar URL da Cloud Function → Salvar
 
----
+### 4. Instalar App no Celular
+Ver aba **📱 Celular** no painel para guia detalhado:
+1. Instalar Flutter SDK
+2. Configurar Android Studio + Depuração USB
+3. Criar projeto Flutter
+4. Configurar pubspec.yaml + build.gradle + AndroidManifest
+5. Copiar `google-services.json` → `android/app/`
+6. `flutter run` → aceitar permissão de notificação
+7. Testar via Token ou Tópico no painel
 
-## 📋 Informações do Projeto Firebase
+### 5. Autorizar Domínio no Firebase Auth
+Firebase Console → Authentication → Settings → Authorized domains → `kayhamcristoffer.github.io`
 
-| Campo | Valor |
-|-------|-------|
-| Project ID | `alertateste-1a1b4` |
-| Sender ID | `904401618741` |
-| Package Android | `br.com.teste.evento` |
-| VAPID Key | `BPTqvjN8Rhb5tI...` |
+### 6. Ativar GitHub Pages
+Repositório → Settings → Pages → main branch → / (root)
 
----
+## 📱 Dados do Projeto Firebase
+- **Project ID:** alertateste-1a1b4
+- **Sender ID:** 904401618741
+- **Tópico:** evento2026
+- **Região da Function:** southamerica-east1
 
-## 🗂️ Estrutura do Repositório
+## 🛠️ Tecnologias
+- HTML5 / Tailwind CSS / JavaScript (ES Modules)
+- Firebase Auth (Google Sign-In)
+- Firebase Cloud Messaging v1
+- Firebase Cloud Functions (Node.js 18)
+- Firebase Admin SDK
+- Flutter (Android/iOS)
+- GitHub Pages (hosting)
 
-```
-Alerta_Celular.io/
-├── index.html    ← Painel completo (HTML estático)
-├── README.md
-└── .gitignore
-```
-
----
-
-## ✅ Checklist
-
-- [ ] Node.js instalado
-- [ ] Firebase CLI instalado e logado
+## 📋 Checklist de Ativação
 - [ ] Plano Blaze ativado
 - [ ] Cloud Function deployada
-- [ ] URL da função configurada no painel
-- [ ] Domínio `github.io` autorizado no Firebase Auth
+- [ ] URL da Function configurada no painel
+- [ ] Domínio github.io autorizado no Firebase Auth
 - [ ] GitHub Pages ativado
-- [ ] App Flutter no celular de teste
+- [ ] App Flutter instalado no celular de teste
 - [ ] Celular aceitou permissão de notificação
-- [ ] 🎉 Primeiro alerta enviado e recebido!
+- [ ] Primeiro alerta enviado e recebido ✅
+
+---
+*Última atualização: 2026-08-07*

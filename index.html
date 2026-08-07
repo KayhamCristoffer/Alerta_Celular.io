@@ -144,7 +144,8 @@
           <button id="tb-config"   onclick="showTab('config')"   class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-gear mr-1.5"></i>Config</button>
           <button id="tb-users"    onclick="showTab('users')"    class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-users mr-1.5"></i>Acesso</button>
           <button id="tb-tutorial" onclick="showTab('tutorial')" class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-book-open mr-1.5"></i>Tutorial</button>
-          <button id="tb-flutter"  onclick="showTab('flutter')"  class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-mobile-screen mr-1.5"></i>Flutter</button>
+          <button id="tb-celular"  onclick="showTab('celular')"  class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-mobile-screen-button mr-1.5"></i>Celular</button>
+          <button id="tb-flutter"  onclick="showTab('flutter')"  class="tab-b px-4 py-2.5 text-xs font-medium text-white/40 rounded-t-lg whitespace-nowrap hover:text-white/65 transition-all"><i class="fas fa-code mr-1.5"></i>Flutter</button>
         </div>
 
         <!-- ━━━━━━━━ ABA: ENVIAR ━━━━━━━━━━━━━━━━━━━━━━━ -->
@@ -359,40 +360,54 @@
               <div>
                 <p class="font-bold text-sm text-red-300 mb-1">Por que o erro "Invalid grant_type" acontece?</p>
                 <p class="text-xs text-white/60 leading-relaxed">
-                  O Google bloqueou chamadas OAuth2 com JWT diretamente do <strong class="text-white">navegador</strong> por segurança (política CORS + proteção de credenciais).
+                  O Google bloqueou chamadas OAuth2 com JWT diretamente do <strong class="text-white">navegador</strong> por segurança (CORS).
                   A chave do Service Account <strong class="text-red-300">nunca deve ficar exposta no frontend</strong>.
-                  A solução correta é usar uma <strong class="text-white">Cloud Function</strong> — ela fica no servidor do Google,
-                  usa o Service Account com segurança e expõe apenas um endpoint simples para o painel chamar.
+                  A solução é usar uma <strong class="text-white">Cloud Function</strong> — ela roda no servidor do Google
+                  e usa o Firebase Admin SDK com credenciais automáticas, sem precisar de JWT manual.
                 </p>
               </div>
             </div>
           </div>
 
-          <!-- ARQUITETURA -->
-          <div class="card cglow p-6">
-            <p class="font-bold text-sm mb-4"><i class="fas fa-diagram-project mr-2 text-indigo-400"></i>Como Funciona Agora</p>
-            <div class="space-y-2 text-xs">
-              <div class="flex items-center gap-3">
-                <div class="w-32 text-center p-2 rounded-lg bg-indigo-500/20 border border-indigo-500/30 font-medium text-indigo-300 flex-shrink-0">
-                  🌐 Painel Web<br><span class="text-white/40 font-normal">GitHub Pages</span>
+          <!-- ARQUITETURA VISUAL -->
+          <div class="card cglow p-5">
+            <p class="font-bold text-sm mb-4"><i class="fas fa-diagram-project mr-2 text-indigo-400"></i>Arquitetura do Sistema</p>
+            <div class="overflow-x-auto">
+              <div class="flex items-stretch gap-2 min-w-max text-xs">
+                <div class="text-center p-3 rounded-xl bg-indigo-500/15 border border-indigo-500/30 w-28">
+                  <div class="text-2xl mb-1">🌐</div>
+                  <p class="font-bold text-indigo-300">Painel Web</p>
+                  <p class="text-white/35 text-xs mt-0.5">GitHub Pages</p>
                 </div>
-                <div class="flex-1 flex items-center gap-1 text-white/40">
-                  <div class="flex-1 h-px bg-white/20"></div>
-                  <span class="whitespace-nowrap">POST JSON</span>
-                  <div class="flex-1 h-px bg-white/20"></div>
-                  <i class="fas fa-arrow-right"></i>
+                <div class="flex flex-col items-center justify-center text-white/30 px-1">
+                  <span class="text-xs mb-1">POST</span>
+                  <div class="flex items-center gap-0.5"><div class="w-8 h-px bg-white/20"></div><i class="fas fa-arrow-right text-xs"></i></div>
+                  <span class="text-xs mt-1">JSON</span>
                 </div>
-                <div class="w-36 text-center p-2 rounded-lg bg-purple-500/20 border border-purple-500/30 font-medium text-purple-300 flex-shrink-0">
-                  ⚡ Cloud Function<br><span class="text-white/40 font-normal">Firebase (gratuito)</span>
+                <div class="text-center p-3 rounded-xl bg-purple-500/15 border border-purple-500/30 w-28">
+                  <div class="text-2xl mb-1">⚡</div>
+                  <p class="font-bold text-purple-300">Cloud Fn</p>
+                  <p class="text-white/35 text-xs mt-0.5">Firebase</p>
                 </div>
-                <div class="flex-1 flex items-center gap-1 text-white/40">
-                  <div class="flex-1 h-px bg-white/20"></div>
-                  <i class="fas fa-arrow-right"></i>
-                  <span class="whitespace-nowrap">FCM v1</span>
-                  <div class="flex-1 h-px bg-white/20"></div>
+                <div class="flex flex-col items-center justify-center text-white/30 px-1">
+                  <span class="text-xs mb-1">FCM</span>
+                  <div class="flex items-center gap-0.5"><div class="w-8 h-px bg-white/20"></div><i class="fas fa-arrow-right text-xs"></i></div>
+                  <span class="text-xs mt-1">v1 API</span>
                 </div>
-                <div class="w-28 text-center p-2 rounded-lg bg-green-500/20 border border-green-500/30 font-medium text-green-300 flex-shrink-0">
-                  📱 Celulares<br><span class="text-white/40 font-normal">Participantes</span>
+                <div class="text-center p-3 rounded-xl bg-orange-500/15 border border-orange-500/30 w-28">
+                  <div class="text-2xl mb-1">🔥</div>
+                  <p class="font-bold text-orange-300">Firebase</p>
+                  <p class="text-white/35 text-xs mt-0.5">FCM Server</p>
+                </div>
+                <div class="flex flex-col items-center justify-center text-white/30 px-1">
+                  <span class="text-xs mb-1">Push</span>
+                  <div class="flex items-center gap-0.5"><div class="w-8 h-px bg-white/20"></div><i class="fas fa-arrow-right text-xs"></i></div>
+                  <span class="text-xs mt-1">notif</span>
+                </div>
+                <div class="text-center p-3 rounded-xl bg-green-500/15 border border-green-500/30 w-28">
+                  <div class="text-2xl mb-1">📱</div>
+                  <p class="font-bold text-green-300">Celulares</p>
+                  <p class="text-white/35 text-xs mt-0.5">Android/iOS</p>
                 </div>
               </div>
             </div>
@@ -400,94 +415,149 @@
 
           <!-- TUTORIAL COMPLETO -->
           <div class="card cglow p-6">
-            <p class="font-bold text-base mb-5">
-              <i class="fas fa-list-ol mr-2 text-indigo-400"></i>Tutorial Completo — Do Zero ao Celular Vibrando
-            </p>
+            <p class="font-bold text-base mb-5"><i class="fas fa-list-ol mr-2 text-indigo-400"></i>Tutorial — Do Zero ao Celular Vibrando</p>
 
-            <!-- PARTE 1: Node.js -->
-            <div class="mb-6">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 1</span>
-                <h3 class="font-semibold text-sm">Instalar Node.js no seu computador</h3>
+            <!-- PARTE 1 -->
+            <div class="mb-5 pb-5 border-b border-white/8">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="step-num text-indigo-300">1</div>
+                <h3 class="font-semibold text-sm">Instalar Node.js</h3>
               </div>
-              <div class="ml-4 space-y-3 text-xs text-white/60">
-                <p>→ Acesse <a href="https://nodejs.org" target="_blank" class="text-indigo-400 hover:underline font-medium">nodejs.org</a> e baixe a versão <strong class="text-white">LTS</strong></p>
-                <p>→ Instale normalmente (Next, Next, Finish)</p>
-                <p>→ Abra o terminal e confirme:</p>
-                <div class="code-block">node --version   # deve mostrar v18 ou superior
-npm --version    # deve mostrar 9 ou superior</div>
+              <div class="ml-9 space-y-2 text-xs text-white/55">
+                <p>Acesse <a href="https://nodejs.org" target="_blank" class="text-indigo-400 hover:underline">nodejs.org</a> → baixe versão <strong class="text-white">LTS</strong> → instale normalmente</p>
+                <div class="code-block">node --version   # v18 ou superior
+npm --version    # 9 ou superior</div>
               </div>
             </div>
 
-            <!-- PARTE 2: Firebase CLI -->
-            <div class="mb-6">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 2</span>
-                <h3 class="font-semibold text-sm">Instalar e configurar o Firebase CLI</h3>
+            <!-- PARTE 2 -->
+            <div class="mb-5 pb-5 border-b border-white/8">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="step-num text-indigo-300">2</div>
+                <h3 class="font-semibold text-sm">Instalar Firebase CLI e fazer login</h3>
               </div>
-              <div class="ml-4 space-y-3 text-xs text-white/60">
-                <p>→ No terminal, execute:</p>
-                <div class="code-block">npm install -g firebase-tools</div>
-                <p>→ Faça login com sua conta Google:</p>
-                <div class="code-block">firebase login</div>
-                <p>→ Vai abrir o navegador — aceite as permissões</p>
-                <p>→ Confirme que está logado:</p>
-                <div class="code-block">firebase projects:list
-# Deve aparecer: alertateste-1a1b4</div>
+              <div class="ml-9 space-y-2 text-xs text-white/55">
+                <div class="code-block">npm install -g firebase-tools
+firebase login
+firebase projects:list  # deve mostrar alertateste-1a1b4</div>
+                <p>O <code class="text-indigo-300">firebase login</code> abrirá o navegador — autorize com sua conta Google.</p>
               </div>
             </div>
 
-            <!-- PARTE 3: Criar Cloud Function -->
-            <div class="mb-6">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 3</span>
-                <h3 class="font-semibold text-sm">Criar a Cloud Function</h3>
+            <!-- PARTE 3 -->
+            <div class="mb-5 pb-5 border-b border-white/8">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="step-num text-indigo-300">3</div>
+                <h3 class="font-semibold text-sm">Ativar Plano Blaze <span class="badge-red ml-1">Obrigatório para Functions</span></h3>
               </div>
-              <div class="ml-4 space-y-3 text-xs text-white/60">
-                <p>→ Crie uma pasta e entre nela:</p>
-                <div class="code-block">mkdir fcm-functions
-cd fcm-functions</div>
-                <p>→ Inicie o projeto Firebase:</p>
-                <div class="code-block">firebase init functions</div>
-                <p>Nas perguntas que aparecerem, responda:</p>
-                <div class="space-y-1.5 ml-2">
-                  <p>• <strong class="text-white">Use an existing project</strong> → selecione <strong class="text-indigo-300">alertateste-1a1b4</strong></p>
-                  <p>• <strong class="text-white">Language</strong> → <strong class="text-indigo-300">JavaScript</strong></p>
-                  <p>• <strong class="text-white">ESLint</strong> → <strong class="text-indigo-300">N</strong> (não)</p>
-                  <p>• <strong class="text-white">Install dependencies</strong> → <strong class="text-indigo-300">Y</strong> (sim)</p>
+              <div class="ml-9 space-y-2 text-xs text-white/55">
+                <div class="warn-box">
+                  <p class="text-amber-200/80 text-xs">Firebase exige o plano Blaze (pay-as-you-go) para Cloud Functions. <strong class="text-white">As primeiras 2 milhões de chamadas/mês são GRATUITAS</strong> — para um evento, custo = R$ 0.</p>
                 </div>
+                <p>→ <a href="https://console.firebase.google.com/project/alertateste-1a1b4/usage/details" target="_blank" class="text-indigo-400 hover:underline">Firebase Console → Uso e cobrança</a></p>
+                <p>→ Fazer upgrade → Blaze → adicionar cartão → definir limite R$ 5</p>
+              </div>
+            </div>
 
-                <p class="mt-3">→ Abra o arquivo <code class="text-indigo-300">functions/index.js</code> e substitua <strong class="text-white">todo o conteúdo</strong> por:</p>
-                <div class="flex items-center justify-between mb-1">
-                  <span class="text-white/35">functions/index.js</span>
-                  <button onclick="cp('fn-code')" class="text-indigo-400 hover:text-indigo-300 text-xs"><i class="fas fa-copy mr-1"></i>Copiar</button>
+            <!-- PARTE 4 -->
+            <div class="mb-5 pb-5 border-b border-white/8">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="step-num text-indigo-300">4</div>
+                <h3 class="font-semibold text-sm">Criar e fazer deploy da Cloud Function</h3>
+              </div>
+              <div class="ml-9 space-y-2 text-xs text-white/55">
+                <div class="code-block">mkdir fcm-functions && cd fcm-functions
+firebase init functions
+# → Use existing project → alertateste-1a1b4
+# → JavaScript → ESLint: N → Install deps: Y</div>
+                <p>Abra <code class="text-indigo-300">functions/index.js</code> e cole o código da aba <strong class="text-white">⚡ Functions</strong> abaixo, depois:</p>
+                <div class="code-block">firebase deploy --only functions
+# Aguarde 1-3 min... depois copie a URL gerada!</div>
+                <div class="ok-box mt-2">
+                  <p class="text-xs text-green-300">URL gerada será algo como:<br><code class="text-green-400">https://southamerica-east1-alertateste-1a1b4.cloudfunctions.net/sendNotification</code></p>
+                  <p class="text-xs text-white/50 mt-1">Cole essa URL na aba ⚙️ Config deste painel → Salvar</p>
                 </div>
-                <pre id="fn-code" class="code-block">const { onRequest } = require("firebase-functions/v2/https");
+              </div>
+            </div>
+
+            <!-- PARTE 5 -->
+            <div class="mb-5 pb-5 border-b border-white/8">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="step-num text-indigo-300">5</div>
+                <h3 class="font-semibold text-sm">Autorizar domínio no Firebase Auth</h3>
+              </div>
+              <div class="ml-9 space-y-2 text-xs text-white/55">
+                <p>→ <a href="https://console.firebase.google.com/project/alertateste-1a1b4/authentication/settings" target="_blank" class="text-indigo-400 hover:underline">Firebase Console → Authentication → Settings → Authorized domains</a></p>
+                <p>→ Add domain: <code class="text-indigo-300">kayhamcristoffer.github.io</code></p>
+                <p>→ Isso permite o login Google funcionar no GitHub Pages</p>
+              </div>
+            </div>
+
+            <!-- PARTE 6 -->
+            <div class="mb-5 pb-5 border-b border-white/8">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="step-num text-indigo-300">6</div>
+                <h3 class="font-semibold text-sm">Ativar GitHub Pages</h3>
+              </div>
+              <div class="ml-9 space-y-2 text-xs text-white/55">
+                <p>→ <a href="https://github.com/KayhamCristoffer/Alerta_Celular.io/settings/pages" target="_blank" class="text-indigo-400 hover:underline">Repositório → Settings → Pages</a></p>
+                <p>→ Source: <strong class="text-white">Deploy from branch</strong> → main → / (root) → Save</p>
+                <p>→ Acesse: <code class="text-indigo-300">https://kayhamcristoffer.github.io/Alerta_Celular.io/</code></p>
+              </div>
+            </div>
+
+            <!-- PARTE 7 -->
+            <div class="mb-5 pb-5 border-b border-white/8">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="step-num text-blue-300">7</div>
+                <h3 class="font-semibold text-sm">Instalar App Flutter no Celular <span class="badge-tip ml-1">Para receber alertas</span></h3>
+              </div>
+              <div class="ml-9 space-y-2 text-xs text-white/55">
+                <p>Veja a aba <strong class="text-white">📱 Celular</strong> para guia visual completo do setup no smartphone.</p>
+                <p>Resumo: copie o código da aba <strong class="text-white">Flutter</strong> → rode no celular → aceite permissão → inscreve no tópico.</p>
+              </div>
+            </div>
+
+            <!-- CHECKLIST FINAL -->
+            <div class="ok-box">
+              <p class="font-bold text-sm text-green-300 mb-3">✅ Checklist Final</p>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <label class="flex items-center gap-2 cursor-pointer text-white/70"><input type="checkbox" class="rounded accent-indigo-500"> Node.js instalado</label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70"><input type="checkbox" class="rounded accent-indigo-500"> Firebase CLI instalado e logado</label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70"><input type="checkbox" class="rounded accent-indigo-500"> Plano Blaze ativado</label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70"><input type="checkbox" class="rounded accent-indigo-500"> Cloud Function deployada</label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70"><input type="checkbox" class="rounded accent-indigo-500"> URL da função colada no painel</label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70"><input type="checkbox" class="rounded accent-indigo-500"> Domínio github.io autorizado no Firebase</label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70"><input type="checkbox" class="rounded accent-indigo-500"> GitHub Pages ativado</label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70"><input type="checkbox" class="rounded accent-indigo-500"> App Flutter instalado no celular</label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70"><input type="checkbox" class="rounded accent-indigo-500"> Celular aceitou permissão de notificação</label>
+                <label class="flex items-center gap-2 cursor-pointer text-white/70"><input type="checkbox" class="rounded accent-indigo-500"> 🎉 Primeiro alerta enviado e recebido!</label>
+              </div>
+            </div>
+          </div><!-- /card tutorial -->
+
+          <!-- CÓDIGO DA CLOUD FUNCTION -->
+          <div class="card cglow p-6" id="card-fncode">
+            <div class="flex items-center justify-between mb-4">
+              <p class="font-bold text-sm"><i class="fas fa-code mr-2 text-purple-400"></i>Código — functions/index.js</p>
+              <button onclick="cp('fn-code')" class="text-xs text-indigo-400 hover:text-indigo-300 border border-indigo-500/30 px-3 py-1.5 rounded-lg"><i class="fas fa-copy mr-1"></i>Copiar tudo</button>
+            </div>
+            <pre id="fn-code" class="code-block" style="max-height:420px;overflow-y:auto">const { onRequest } = require("firebase-functions/v2/https");
 const { initializeApp } = require("firebase-admin/app");
 const { getMessaging } = require("firebase-admin/messaging");
 
-// Inicializa o Firebase Admin (usa as credenciais automáticas)
 initializeApp();
 
 exports.sendNotification = onRequest(
-  {
-    // Região mais próxima do Brasil
-    region: "southamerica-east1",
-    // Permite chamadas do GitHub Pages (CORS)
-    cors: true,
-  },
+  { region: "southamerica-east1", cors: true },
   async (req, res) => {
-    // Aceita apenas POST
-    if (req.method !== "POST") {
+    if (req.method !== "POST")
       return res.status(405).json({ error: "Método não permitido" });
-    }
 
     try {
       const { title, body, topic, token, tokens } = req.body;
-
-      if (!title || !body) {
+      if (!title || !body)
         return res.status(400).json({ error: "title e body são obrigatórios" });
-      }
 
       const notification = { title, body };
       const android = {
@@ -505,205 +575,380 @@ exports.sendNotification = onRequest(
         headers: { "apns-priority": "10" },
       };
 
-      let result;
-
       if (topic) {
-        // Enviar para um tópico (todos os inscritos)
-        result = await getMessaging().send({
-          topic,
-          notification,
-          android,
-          apns,
+        const result = await getMessaging().send({
+          topic, notification, android, apns,
           data: { type: "EVENT_ALERT", ts: String(Date.now()) },
         });
         return res.json({ success: true, sent: 1, messageId: result });
 
       } else if (tokens && Array.isArray(tokens) && tokens.length > 0) {
-        // Enviar para lista de tokens (máx 500 por vez)
-        const chunks = [];
-        for (let i = 0; i < tokens.length; i += 500) {
-          chunks.push(tokens.slice(i, i + 500));
-        }
         let totalOk = 0, totalFail = 0;
-        for (const chunk of chunks) {
+        for (let i = 0; i < tokens.length; i += 500) {
           const r = await getMessaging().sendEachForMulticast({
-            tokens: chunk,
-            notification,
-            android,
-            apns,
+            tokens: tokens.slice(i, i + 500),
+            notification, android, apns,
             data: { type: "EVENT_ALERT", ts: String(Date.now()) },
           });
-          totalOk   += r.successCount;
+          totalOk += r.successCount;
           totalFail += r.failureCount;
         }
-        return res.json({
-          success: true,
-          sent: totalOk,
-          failed: totalFail,
-        });
+        return res.json({ success: true, sent: totalOk, failed: totalFail });
 
       } else if (token) {
-        // Enviar para um token específico
-        result = await getMessaging().send({
-          token,
-          notification,
-          android,
-          apns,
+        const result = await getMessaging().send({
+          token, notification, android, apns,
           data: { type: "EVENT_ALERT", ts: String(Date.now()) },
         });
         return res.json({ success: true, sent: 1, messageId: result });
 
       } else {
-        return res.status(400).json({
-          error: "Informe topic, token ou tokens[]",
-        });
+        return res.status(400).json({ error: "Informe topic, token ou tokens[]" });
       }
     } catch (err) {
       console.error("Erro FCM:", err);
-      return res.status(500).json({
-        success: false,
-        error: err.message,
-        code: err.code,
-      });
+      return res.status(500).json({ success: false, error: err.message, code: err.code });
     }
   }
 );</pre>
-              </div>
-            </div>
+          </div>
 
-            <!-- PARTE 4: Fazer o deploy -->
-            <div class="mb-6">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="bg-indigo-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 4</span>
-                <h3 class="font-semibold text-sm">Fazer o deploy da Cloud Function</h3>
-              </div>
-              <div class="ml-4 space-y-3 text-xs text-white/60">
-                <p>→ No terminal (dentro da pasta <code class="text-indigo-300">fcm-functions</code>):</p>
-                <div class="code-block">firebase deploy --only functions</div>
-                <p>→ Aguarde 1–3 minutos. No final aparecerá algo como:</p>
-                <div class="code-block" style="color:#58a6ff">✔  functions[sendNotification(southamerica-east1)]: Successful!
-
-Function URL (sendNotification(southamerica-east1)):
-https://southamerica-east1-alertateste-1a1b4.cloudfunctions.net/sendNotification</div>
-                <div class="warn-box mt-2">
-                  <p class="text-xs text-amber-200/80 flex items-start gap-2">
-                    <i class="fas fa-copy text-amber-400 mt-0.5 flex-shrink-0"></i>
-                    <strong>Copie esta URL</strong> e cole na aba ⚙️ Configurações deste painel → Salvar.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <!-- PARTE 5: Habilitar Billing (Spark → Blaze) -->
-            <div class="mb-6">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="bg-orange-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 5</span>
-                <h3 class="font-semibold text-sm">Ativar plano Blaze (obrigatório para deploy)</h3>
-              </div>
-              <div class="ml-4 space-y-3 text-xs text-white/60">
-                <div class="warn-box">
-                  <p class="font-semibold text-amber-300 text-xs mb-1">⚠️ O Firebase exige o plano Blaze para fazer deploy de Cloud Functions</p>
-                  <p class="text-amber-200/70">O plano Blaze é <strong class="text-white">pago conforme o uso</strong>, mas tem uma generosa cota gratuita.
-                  Para um evento, o custo será <strong class="text-white">R$ 0,00</strong> (as primeiras 2 milhões de chamadas por mês são gratuitas).</p>
-                </div>
-                <p>→ Acesse: <a href="https://console.firebase.google.com/project/alertateste-1a1b4/usage/details" target="_blank" class="text-indigo-400 hover:underline">Firebase Console → Uso e cobrança</a></p>
-                <p>→ Clique em <strong class="text-white">Fazer upgrade</strong> → selecione <strong class="text-white">Blaze</strong></p>
-                <p>→ Adicione um cartão (não será cobrado dentro do limite gratuito)</p>
-                <p>→ Defina um <strong class="text-white">limite de orçamento</strong> como R$ 5 para segurança</p>
-                <p>→ Volte ao terminal e execute o deploy novamente (Parte 4)</p>
-              </div>
-            </div>
-
-            <!-- PARTE 6: App Flutter -->
-            <div class="mb-6">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="bg-blue-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 6</span>
-                <h3 class="font-semibold text-sm">Configurar o App no Celular (Flutter)</h3>
-              </div>
-              <div class="ml-4 space-y-3 text-xs text-white/60">
-                <p>→ Veja a aba <strong class="text-white">📱 Flutter</strong> para o código completo</p>
-                <p>→ Coloque o arquivo <code class="text-indigo-300">google-services.json</code> em <code class="text-indigo-300">android/app/</code></p>
-                <p>→ Execute no celular com:</p>
-                <div class="code-block">flutter run</div>
-                <p>→ O app pedirá permissão de notificação — <strong class="text-white">aceite!</strong></p>
-                <p>→ O app se inscreve automaticamente no tópico <code class="text-indigo-300">evento2026</code></p>
-                <p>→ O token FCM aparece na tela do app — copie para testar no painel</p>
-              </div>
-            </div>
-
-            <!-- PARTE 7: Domínio no Firebase Auth -->
-            <div class="mb-6">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="bg-green-700 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 7</span>
-                <h3 class="font-semibold text-sm">Autorizar o domínio no Firebase Auth</h3>
-              </div>
-              <div class="ml-4 space-y-2 text-xs text-white/60">
-                <p>→ Firebase Console → <strong class="text-white">Authentication</strong> → aba <strong class="text-white">Settings</strong></p>
-                <p>→ <strong class="text-white">Authorized domains</strong> → <strong class="text-white">Add domain</strong></p>
-                <p>→ Adicione: <code class="text-indigo-300">kayhamcristoffer.github.io</code></p>
-                <p>→ Isso permite o botão "Entrar com Google" funcionar no GitHub Pages</p>
-              </div>
-            </div>
-
-            <!-- PARTE 8: GitHub Pages -->
-            <div class="mb-6">
-              <div class="flex items-center gap-2 mb-4">
-                <span class="bg-gray-600 text-white text-xs font-bold px-2.5 py-1 rounded-lg">PARTE 8</span>
-                <h3 class="font-semibold text-sm">Ativar o GitHub Pages</h3>
-              </div>
-              <div class="ml-4 space-y-2 text-xs text-white/60">
-                <p>→ <a href="https://github.com/KayhamCristoffer/Alerta_Celular.io/settings/pages" target="_blank" class="text-indigo-400 hover:underline">github.com/KayhamCristoffer/Alerta_Celular.io → Settings → Pages</a></p>
-                <p>→ Source: <strong class="text-white">Deploy from a branch</strong></p>
-                <p>→ Branch: <strong class="text-white">main</strong> · Folder: <strong class="text-white">/ (root)</strong></p>
-                <p>→ Save → aguarde ~1 min → acesse <code class="text-indigo-300">https://kayhamcristoffer.github.io/Alerta_Celular.io/</code></p>
-              </div>
-            </div>
-
-            <!-- CHECKLIST FINAL -->
-            <div class="ok-box">
-              <p class="font-bold text-sm text-green-300 mb-3">✅ Checklist Final</p>
-              <div class="space-y-2 text-xs">
-                <label class="flex items-center gap-2 cursor-pointer text-white/70">
-                  <input type="checkbox" class="rounded"> Node.js instalado
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-white/70">
-                  <input type="checkbox" class="rounded"> Firebase CLI instalado e logado
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-white/70">
-                  <input type="checkbox" class="rounded"> Plano Blaze ativado no Firebase
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-white/70">
-                  <input type="checkbox" class="rounded"> Cloud Function deployada (URL copiada)
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-white/70">
-                  <input type="checkbox" class="rounded"> URL da função colada na aba ⚙️ Config
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-white/70">
-                  <input type="checkbox" class="rounded"> Domínio github.io autorizado no Firebase Auth
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-white/70">
-                  <input type="checkbox" class="rounded"> GitHub Pages ativado (branch main, raiz /)
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-white/70">
-                  <input type="checkbox" class="rounded"> App Flutter instalado no celular de teste
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-white/70">
-                  <input type="checkbox" class="rounded"> Celular aceitou permissão de notificação
-                </label>
-                <label class="flex items-center gap-2 cursor-pointer text-white/70">
-                  <input type="checkbox" class="rounded"> 🎉 Primeiro alerta enviado e recebido!
-                </label>
-              </div>
-            </div>
-
-          </div><!-- /card tutorial -->
         </div><!-- /tab-tutorial -->
+
+        <!-- ━━━━━━━━ ABA: CELULAR ━━━━━━━━━━━━━━━━━━━━━━ -->
+        <div id="tab-celular" class="hidden space-y-4">
+
+          <!-- INTRO -->
+          <div class="info-box">
+            <div class="flex items-start gap-3">
+              <span class="text-2xl">📱</span>
+              <div>
+                <p class="font-bold text-sm text-indigo-300 mb-1">Como o celular recebe as notificações</p>
+                <p class="text-xs text-white/55 leading-relaxed">
+                  O celular precisa ter um <strong class="text-white">app instalado</strong> que use o Firebase Messaging SDK.
+                  Ao instalar, o app recebe um <strong class="text-white">token FCM único</strong> e se inscreve no
+                  <strong class="text-white">tópico "evento2026"</strong>. Quando você envia pelo painel,
+                  o Firebase entrega a notificação a todos os inscritos nesse tópico — instantaneamente.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 1: Flutter SDK -->
+          <div class="card cglow p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center font-bold text-blue-300 text-sm flex-shrink-0">1</div>
+              <div>
+                <p class="font-semibold text-sm">Instalar Flutter SDK no computador</p>
+                <p class="text-xs text-white/35">Necessário para compilar o app</p>
+              </div>
+            </div>
+            <div class="space-y-3 text-xs text-white/55 ml-11">
+              <p>→ Acesse <a href="https://flutter.dev/docs/get-started/install" target="_blank" class="text-indigo-400 hover:underline font-medium">flutter.dev/docs/get-started/install</a> e baixe para seu SO</p>
+              <p>→ Extraia e adicione ao PATH do sistema</p>
+              <p>→ Verifique com:</p>
+              <div class="code-block">flutter doctor
+# Deve mostrar ✓ Flutter (com versão 3.x)
+# Deve mostrar ✓ Android toolchain (ou ✓ Xcode para iOS)</div>
+              <div class="warn-box mt-2">
+                <p class="text-xs text-amber-200/80">Se aparecer ✗ nos itens, o Flutter doctor indica o que instalar. O principal é o <strong class="text-white">Android Studio</strong> com SDK.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 2: Android Studio -->
+          <div class="card cglow p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-xl bg-green-500/20 border border-green-500/30 flex items-center justify-center font-bold text-green-300 text-sm flex-shrink-0">2</div>
+              <div>
+                <p class="font-semibold text-sm">Instalar Android Studio + Configurar Dispositivo</p>
+                <p class="text-xs text-white/35">Para compilar e rodar no celular Android</p>
+              </div>
+            </div>
+            <div class="space-y-3 text-xs text-white/55 ml-11">
+              <p>→ Baixe <a href="https://developer.android.com/studio" target="_blank" class="text-indigo-400 hover:underline">developer.android.com/studio</a> e instale</p>
+              <p>→ Durante instalação: marque <strong class="text-white">Android SDK</strong> e <strong class="text-white">Android Virtual Device</strong></p>
+              <div class="mt-2 space-y-2">
+                <p class="text-white/70 font-medium">Para usar celular físico (recomendado):</p>
+                <div class="ml-3 space-y-1.5">
+                  <p>1. No celular: <strong class="text-white">Configurações → Sobre o telefone</strong></p>
+                  <p>2. Toque <strong class="text-white">7 vezes</strong> em "Número de compilação" → Ativa Modo Desenvolvedor</p>
+                  <p>3. <strong class="text-white">Configurações → Opções do desenvolvedor</strong></p>
+                  <p>4. Ative <strong class="text-white">Depuração USB</strong></p>
+                  <p>5. Conecte o cabo USB ao computador</p>
+                  <p>6. No celular aparecerá popup: <strong class="text-white">Autorizar depuração USB?</strong> → toque <strong class="text-white">OK</strong></p>
+                  <p>7. Confirme no terminal:</p>
+                </div>
+              </div>
+              <div class="code-block">adb devices
+# Deve mostrar: List of devices attached
+# XXXXXXXX  device  ← seu celular aqui</div>
+            </div>
+          </div>
+
+          <!-- PASSO 3: Criar projeto Flutter -->
+          <div class="card cglow p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-500/30 flex items-center justify-center font-bold text-purple-300 text-sm flex-shrink-0">3</div>
+              <div>
+                <p class="font-semibold text-sm">Criar o Projeto Flutter</p>
+                <p class="text-xs text-white/35">App que receberá as notificações</p>
+              </div>
+            </div>
+            <div class="space-y-3 text-xs text-white/55 ml-11">
+              <p>→ No terminal:</p>
+              <div class="code-block">flutter create alerta_evento
+cd alerta_evento</div>
+              <p>→ Copie o arquivo <code class="text-indigo-300">google-services.json</code> para:</p>
+              <div class="code-block">alerta_evento/android/app/google-services.json</div>
+              <div class="info-box mt-2">
+                <p class="text-xs text-white/55">
+                  <i class="fas fa-circle-info text-indigo-400 mr-1"></i>
+                  O <code class="text-indigo-300">google-services.json</code> é o arquivo que você já tem do Firebase (Project ID: alertateste-1a1b4).
+                  Sem ele o app não consegue se conectar ao FCM.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 4: pubspec.yaml -->
+          <div class="card cglow p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-xl bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center font-bold text-yellow-300 text-sm flex-shrink-0">4</div>
+              <div>
+                <p class="font-semibold text-sm">Configurar Dependências (pubspec.yaml)</p>
+                <p class="text-xs text-white/35">Adicionar o Firebase Messaging ao projeto</p>
+              </div>
+            </div>
+            <div class="space-y-3 text-xs text-white/55 ml-11">
+              <p>→ Abra <code class="text-indigo-300">pubspec.yaml</code> e adicione na seção <code class="text-white">dependencies</code>:</p>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-white/35 text-xs">pubspec.yaml</span>
+                <button onclick="cp('pub-dep')" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-copy mr-1"></i>Copiar</button>
+              </div>
+              <pre id="pub-dep" class="code-block">dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^3.6.0
+  firebase_messaging: ^15.1.3
+  flutter_local_notifications: ^17.2.2</pre>
+              <p>→ Salve e execute:</p>
+              <div class="code-block">flutter pub get</div>
+            </div>
+          </div>
+
+          <!-- PASSO 5: build.gradle -->
+          <div class="card cglow p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-xl bg-orange-500/20 border border-orange-500/30 flex items-center justify-center font-bold text-orange-300 text-sm flex-shrink-0">5</div>
+              <div>
+                <p class="font-semibold text-sm">Configurar Android (build.gradle)</p>
+                <p class="text-xs text-white/35">Necessário para o Google Services funcionar</p>
+              </div>
+            </div>
+            <div class="space-y-4 text-xs text-white/55 ml-11">
+              <div>
+                <p class="text-white/70 font-medium mb-2">Arquivo: <code class="text-orange-300">android/build.gradle</code> (raiz do projeto)</p>
+                <p>Na seção <code class="text-white">plugins {'{}'}</code>, adicione:</p>
+                <div class="flex items-center justify-between mb-1 mt-2">
+                  <span class="text-white/35">android/build.gradle</span>
+                  <button onclick="cp('root-gradle')" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-copy mr-1"></i>Copiar</button>
+                </div>
+                <pre id="root-gradle" class="code-block">plugins {
+    id("com.google.gms.google-services") version "4.5.0" apply false
+}</pre>
+              </div>
+              <div>
+                <p class="text-white/70 font-medium mb-2">Arquivo: <code class="text-orange-300">android/app/build.gradle</code></p>
+                <div class="flex items-center justify-between mb-1">
+                  <span class="text-white/35">android/app/build.gradle</span>
+                  <button onclick="cp('app-gradle')" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-copy mr-1"></i>Copiar</button>
+                </div>
+                <pre id="app-gradle" class="code-block">plugins {
+    id("com.android.application")
+    id("com.google.gms.google-services")  // ← adicionar esta linha
+}
+
+dependencies {
+    implementation(platform("com.google.firebase:firebase-bom:34.0.0"))
+    implementation("com.google.firebase:firebase-messaging")
+}</pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 6: AndroidManifest -->
+          <div class="card cglow p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-xl bg-red-500/20 border border-red-500/30 flex items-center justify-center font-bold text-red-300 text-sm flex-shrink-0">6</div>
+              <div>
+                <p class="font-semibold text-sm">Permissões no AndroidManifest.xml</p>
+                <p class="text-xs text-white/35">Necessário para Android 13+ (API 33+)</p>
+              </div>
+            </div>
+            <div class="space-y-3 text-xs text-white/55 ml-11">
+              <p>Abra <code class="text-indigo-300">android/app/src/main/AndroidManifest.xml</code> e adicione dentro de <code class="text-white">&lt;manifest&gt;</code>:</p>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-white/35">AndroidManifest.xml</span>
+                <button onclick="cp('manifest-code')" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-copy mr-1"></i>Copiar</button>
+              </div>
+              <pre id="manifest-code" class="code-block">&lt;!-- Permissão de notificação (Android 13+) --&gt;
+&lt;uses-permission android:name="android.permission.POST_NOTIFICATIONS"/&gt;
+&lt;uses-permission android:name="android.permission.INTERNET"/&gt;
+&lt;uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/&gt;
+
+&lt;!-- Canal de notificação de alta prioridade --&gt;
+&lt;application ...&gt;
+    &lt;meta-data
+        android:name="com.google.firebase.messaging.default_notification_channel_id"
+        android:value="event_alerts" /&gt;
+    &lt;meta-data
+        android:name="com.google.firebase.messaging.default_notification_icon"
+        android:resource="@mipmap/ic_launcher" /&gt;
+    &lt;meta-data
+        android:name="com.google.firebase.messaging.default_notification_color"
+        android:resource="@color/colorAccent" /&gt;
+&lt;/application&gt;</pre>
+            </div>
+          </div>
+
+          <!-- PASSO 7: main.dart -->
+          <div class="card cglow p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-xl bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center font-bold text-indigo-300 text-sm flex-shrink-0">7</div>
+              <div>
+                <p class="font-semibold text-sm">Código Principal (lib/main.dart)</p>
+                <p class="text-xs text-white/35">O app que recebe e exibe os alertas</p>
+              </div>
+            </div>
+            <div class="space-y-3 text-xs text-white/55 ml-11">
+              <p>Substitua todo o conteúdo de <code class="text-indigo-300">lib/main.dart</code> pelo código da aba <strong class="text-white">Flutter</strong> (clique na aba acima).</p>
+              <div class="info-box mt-1">
+                <p class="text-xs text-white/55"><i class="fas fa-circle-info text-indigo-400 mr-1"></i>O código já inclui: solicitação de permissão, inscrição no tópico <code class="text-indigo-300">evento2026</code>, exibição do token FCM e listener de mensagens em foreground/background.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 8: Rodar no celular -->
+          <div class="card cglow p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-xl bg-green-500/20 border border-green-500/30 flex items-center justify-center font-bold text-green-300 text-sm flex-shrink-0">8</div>
+              <div>
+                <p class="font-semibold text-sm">Rodar o App no Celular</p>
+                <p class="text-xs text-white/35">Momento da verdade!</p>
+              </div>
+            </div>
+            <div class="space-y-3 text-xs text-white/55 ml-11">
+              <p>→ Celular conectado via USB com Depuração USB ativa</p>
+              <div class="code-block">flutter devices   # deve listar seu celular
+flutter run       # compila e instala (leva 1-3 min)</div>
+              <div class="space-y-2 mt-3">
+                <div class="flex items-start gap-2">
+                  <span class="text-green-400 flex-shrink-0 font-bold">✓</span>
+                  <p>O app abre no celular e pede permissão de notificação → <strong class="text-white">Permitir/Allow</strong></p>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-green-400 flex-shrink-0 font-bold">✓</span>
+                  <p>A tela mostra o <strong class="text-white">Token FCM</strong> — anote-o para testar envio individual</p>
+                </div>
+                <div class="flex items-start gap-2">
+                  <span class="text-green-400 flex-shrink-0 font-bold">✓</span>
+                  <p>Mostra <strong class="text-white">"✓ Inscrito no tópico: evento2026"</strong> — pronto para receber!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PASSO 9: Testar -->
+          <div class="card cglow p-6">
+            <div class="flex items-center gap-3 mb-4">
+              <div class="w-8 h-8 rounded-xl bg-yellow-500/20 border border-yellow-500/30 flex items-center justify-center font-bold text-yellow-300 text-sm flex-shrink-0">9</div>
+              <div>
+                <p class="font-semibold text-sm">Testar o Envio de Notificação</p>
+                <p class="text-xs text-white/35">Verificar se tudo funciona</p>
+              </div>
+            </div>
+            <div class="space-y-3 text-xs text-white/55 ml-11">
+              <div class="space-y-2">
+                <div class="p-3 rounded-xl bg-white/5 border border-white/8">
+                  <p class="font-semibold text-white/80 mb-2">🧪 Teste 1: Via Token (mais rápido)</p>
+                  <p>1. Copie o token FCM que aparece no app</p>
+                  <p class="mt-1">2. No painel → Enviar → modo <strong class="text-white">Token Único</strong> → cole o token</p>
+                  <p class="mt-1">3. Escreva título e mensagem → Enviar</p>
+                  <p class="mt-1 text-green-400">→ Notificação deve aparecer no celular em menos de 1 segundo!</p>
+                </div>
+                <div class="p-3 rounded-xl bg-white/5 border border-white/8">
+                  <p class="font-semibold text-white/80 mb-2">📡 Teste 2: Via Tópico (para todos)</p>
+                  <p>1. No painel → modo <strong class="text-white">Tópico (Todos)</strong></p>
+                  <p class="mt-1">2. Tópico: <code class="text-indigo-300">evento2026</code></p>
+                  <p class="mt-1">3. Enviar → todos com o app chegam a notificação</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- PROBLEMAS COMUNS -->
+          <div class="card cglow p-6">
+            <p class="font-bold text-sm mb-4"><i class="fas fa-wrench mr-2 text-red-400"></i>Problemas Comuns e Soluções</p>
+            <div class="space-y-3 text-xs">
+              <div class="p-3 rounded-xl bg-red-500/8 border border-red-500/20">
+                <p class="font-semibold text-red-300 mb-1">❌ "INVALID_ARGUMENT" ou "Requested entity was not found"</p>
+                <p class="text-white/50">O token FCM é inválido ou expirou. Reinicie o app para gerar um novo token. Tokens expiram quando o app é reinstalado ou limpa os dados.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-red-500/8 border border-red-500/20">
+                <p class="font-semibold text-red-300 mb-1">❌ Notificação não aparece com app aberto</p>
+                <p class="text-white/50">Normal! Com o app em foreground, o FCM entrega a mensagem ao app mas <strong class="text-white">não mostra notificação visual</strong>. Você precisa exibi-la manualmente com <code class="text-indigo-300">flutter_local_notifications</code>. Feche o app e teste novamente.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-red-500/8 border border-red-500/20">
+                <p class="font-semibold text-red-300 mb-1">❌ "MissingPluginException" ao rodar</p>
+                <p class="text-white/50">Execute <code class="text-indigo-300">flutter clean && flutter pub get && flutter run</code>. Isso limpa o cache e reinstala os plugins.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-red-500/8 border border-red-500/20">
+                <p class="font-semibold text-red-300 mb-1">❌ "google-services.json not found"</p>
+                <p class="text-white/50">Certifique-se que o arquivo está em <code class="text-indigo-300">android/app/google-services.json</code> (não apenas em <code>android/</code>).</p>
+              </div>
+              <div class="p-3 rounded-xl bg-amber-500/8 border border-amber-500/20">
+                <p class="font-semibold text-amber-300 mb-1">⚠️ Celular não pede permissão de notificação</p>
+                <p class="text-white/50">Em Android abaixo do 13 (API 33), a permissão é concedida automaticamente na instalação. Em Android 13+, o código Flutter deve chamar <code class="text-indigo-300">requestPermission()</code> — que já está no código fornecido.</p>
+              </div>
+              <div class="p-3 rounded-xl bg-amber-500/8 border border-amber-500/20">
+                <p class="font-semibold text-amber-300 mb-1">⚠️ Cloud Function retorna erro 500</p>
+                <p class="text-white/50">Verifique os logs: <code class="text-indigo-300">firebase functions:log</code>. Cause mais comum: Cloud Messaging API desativada no projeto. Ative em <a href="https://console.firebase.google.com/project/alertateste-1a1b4/messaging" target="_blank" class="text-indigo-400 hover:underline">Firebase Console → Cloud Messaging</a>.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- DICA FINAL -->
+          <div class="ok-box">
+            <div class="flex items-start gap-3">
+              <span class="text-2xl">🚀</span>
+              <div>
+                <p class="font-bold text-sm text-green-300 mb-2">Dica para o Evento Real</p>
+                <div class="space-y-1.5 text-xs text-white/60">
+                  <p>→ Distribua o APK do app para os participantes via <strong class="text-white">Google Play</strong> ou link direto</p>
+                  <p>→ Para gerar APK: <code class="text-indigo-300">flutter build apk --release</code> → arquivo em <code class="text-indigo-300">build/app/outputs/flutter-apk/</code></p>
+                  <p>→ Use <strong class="text-white">modo Tópico</strong> para enviar a todos de uma vez</p>
+                  <p>→ Todos que instalarem o app e abrirem pelo menos uma vez receberão os alertas</p>
+                  <p>→ O celular não precisa estar com o app aberto — a notificação chega mesmo com app fechado!</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /tab-celular -->
 
         <!-- ━━━━━━━━ ABA: FLUTTER ━━━━━━━━━━━━━━━━━━━━━━ -->
         <div id="tab-flutter" class="hidden space-y-4">
+
+          <div class="info-box">
+            <p class="text-xs text-white/55"><i class="fas fa-circle-info text-indigo-400 mr-1.5"></i>
+              Estes são os arquivos de código do app Flutter. Para o tutorial passo-a-passo de instalação no celular, acesse a aba <strong class="text-white">📱 Celular</strong>.
+            </p>
+          </div>
+
           <div class="card cglow p-6">
-            <p class="font-semibold text-sm mb-1"><i class="fas fa-mobile-screen mr-2 text-blue-400"></i>App Flutter</p>
-            <p class="text-xs text-white/40 mb-5">Código completo para Android e iOS.</p>
+            <p class="font-semibold text-sm mb-1"><i class="fas fa-code mr-2 text-blue-400"></i>Código do App Flutter</p>
+            <p class="text-xs text-white/40 mb-5">Código completo para Android e iOS — recebe notificações do tópico <code class="text-indigo-300">evento2026</code>.</p>
 
             <div class="mb-5">
               <div class="flex items-center justify-between mb-2">
@@ -716,32 +961,6 @@ https://southamerica-east1-alertateste-1a1b4.cloudfunctions.net/sendNotification
   firebase_core: ^3.6.0
   firebase_messaging: ^15.1.3
   flutter_local_notifications: ^17.2.2</pre>
-            </div>
-
-            <div class="mb-5">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs text-white/35 font-mono">android/app/build.gradle</span>
-                <button onclick="cp('gradle-code')" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-copy mr-1"></i>Copiar</button>
-              </div>
-              <pre id="gradle-code" class="code-block">plugins {
-    id("com.android.application")
-    id("com.google.gms.google-services")  // ← adicionar
-}
-
-dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:34.17.0"))
-    implementation("com.google.firebase:firebase-messaging")
-}</pre>
-            </div>
-
-            <div class="mb-5">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-xs text-white/35 font-mono">android/build.gradle (raiz)</span>
-                <button onclick="cp('root-gradle')" class="text-xs text-indigo-400 hover:text-indigo-300"><i class="fas fa-copy mr-1"></i>Copiar</button>
-              </div>
-              <pre id="root-gradle" class="code-block">plugins {
-    id("com.google.gms.google-services") version "4.5.0" apply false
-}</pre>
             </div>
 
             <div>
@@ -1291,7 +1510,7 @@ window.showApp = (user) => {
 
 // ── Tabs ──────────────────────────────────────────────────────
 window.showTab = (tab) => {
-  ['send','config','users','tutorial','flutter'].forEach(t => {
+  ['send','config','users','tutorial','celular','flutter'].forEach(t => {
     document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
     const b = document.getElementById('tb-' + t);
     if (t === tab) { b.classList.add('tab-active'); b.classList.remove('text-white/40'); }
